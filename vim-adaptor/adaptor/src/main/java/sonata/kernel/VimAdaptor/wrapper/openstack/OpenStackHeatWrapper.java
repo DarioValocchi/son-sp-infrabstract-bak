@@ -47,6 +47,7 @@ import sonata.kernel.VimAdaptor.wrapper.WrapperConfiguration;
 import sonata.kernel.VimAdaptor.wrapper.WrapperStatusUpdate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class OpenStackHeatWrapper extends ComputeWrapper {
@@ -74,6 +75,7 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
     OpenStackNovaClient novaClient = new OpenStackNovaClient(config.getVimEndpoint().toString(),
         config.getAuthUserName(), config.getAuthPass(), config.getTenantName());
     ArrayList<Flavor> vimFlavors = novaClient.getFlavors();
+    Collections.sort(vimFlavors);
     HeatModel stack;
     try {
       stack = translate(data, vimFlavors);
@@ -180,7 +182,7 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
     cidr = null;
     // One virtual router for NSD virtual links connecting VNFS (no router for external virtual
     // links and management links)
-    // TODO how we connect to the tenant network?
+    
     ArrayList<VnfDescriptor> vnfs = data.getVnfdList();
     for (VirtualLink link : nsd.getVirtualLinks()) {
       ArrayList<String> connectionPointReference = link.getConnectionPointsReference();
@@ -315,7 +317,12 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
         if (!isMgmtPort) {
           // Resolve vnf_id from vnf_name
           String vnfId = null;
+          //System.out.println("[TRANSLATION] VNFD.name: " + vnfd.getName());
+         
           for (NetworkFunction vnf : nsd.getNetworkFunctions()) {
+            //System.out.println("[TRANSLATION] NSD.network_functions.vnf_name: " + vnf.getVnfName());
+            //System.out.println("[TRANSLATION] NSD.network_functions.vnf_id: " + vnf.getVnfId());
+
             if (vnf.getVnfName().equals(vnfd.getName())) {
               vnfId = vnf.getVnfId();
             }

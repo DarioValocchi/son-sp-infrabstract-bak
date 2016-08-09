@@ -115,7 +115,9 @@ public class AdaptorDispatcher implements Runnable {
     } else if (message.getTopic().contains("storage")) {
       // TODO Storage Management API
     } else if (message.getTopic().contains("network")) {
-      // TODO Networking Management API
+      if (message.getTopic().endsWith("add")) {
+        myThreadPool.execute(new AddVimCallProcessor(message, message.getSid(), mux));
+      }
     } else {
       System.out.println("Received an unknown menagement message on topic: " + message.getTopic());
     }

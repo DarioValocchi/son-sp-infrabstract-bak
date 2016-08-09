@@ -26,6 +26,27 @@
 
 package sonata.kernel.VimAdaptor.wrapper;
 
-abstract class NetworkingWrapper implements Wrapper {
+import sonata.kernel.VimAdaptor.commons.DeployServiceData;
+import sonata.kernel.VimAdaptor.commons.heat.StackComposition;
+
+public abstract class NetworkingWrapper extends AbstractWrapper implements Wrapper {
+
+
+
+  public NetworkingWrapper() {
+
+    this.setType("networking");
+
+  }
+
+  /**
+   * Configure the SFC and networking aspects of the service
+   * 
+   * @param the service deployment descriptors
+   * @param the composition of the deployed service
+   * @throws Exception
+   * 
+   */
+  public abstract void configureNetworking(DeployServiceData data, StackComposition composition) throws Exception;
 
 }

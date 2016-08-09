@@ -24,36 +24,19 @@
  * 
  */
 
-package sonata.kernel.VimAdaptor.commons.vnfd;
+package sonata.kernel.VimAdaptor.wrapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+enum NetworkingVimType {
+  OPENDAYLIGHT("odl");
 
-public class ConnectionPointReference implements Comparable<ConnectionPointReference>{
+  private final String name;
 
-  @JsonProperty("connection_point_ref")
-  private String connectionPointRef;
-  private int position;
-
-
-  public int getPosition() {
-    return position;
-  }
-
-  public String getConnectionPointRef() {
-    return connectionPointRef;
-  }
-
-  public void setConnectionPointRef(String connectionPointRef) {
-    this.connectionPointRef = connectionPointRef;
-  }
-
-  public void setPosition(int position) {
-    this.position = position;
+  NetworkingVimType(String name) {
+    this.name = name;
   }
 
   @Override
-  public int compareTo(ConnectionPointReference o) {
-    return (int)Math.signum(position-o.getPosition());
+  public String toString() {
+    return this.name;
   }
-
 }

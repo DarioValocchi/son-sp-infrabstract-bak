@@ -246,10 +246,9 @@ public class OpenStackHeatClient {
       String compositionString = builder.toString();
       compositionString = compositionString.replace("'", "\"");
       compositionString = compositionString.replace(": u", " : ");
-
       ObjectMapper mapper = new ObjectMapper(new JsonFactory());
       mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-      // System.out.println(compositionString);
+      System.out.println(compositionString);
       composition = mapper.readValue(compositionString, StackComposition.class);
 
     } catch (Exception e) {

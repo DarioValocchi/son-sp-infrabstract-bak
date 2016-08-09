@@ -26,34 +26,28 @@
 
 package sonata.kernel.VimAdaptor.commons.vnfd;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class FsmOption {
 
-public class ConnectionPointReference implements Comparable<ConnectionPointReference>{
+  private String key;
+  private String value;
 
-  @JsonProperty("connection_point_ref")
-  private String connectionPointRef;
-  private int position;
-
-
-  public int getPosition() {
-    return position;
+  public String getKey() {
+    return key;
   }
 
-  public String getConnectionPointRef() {
-    return connectionPointRef;
+  public String getValue() {
+    return value;
   }
 
-  public void setConnectionPointRef(String connectionPointRef) {
-    this.connectionPointRef = connectionPointRef;
+  public void setKey(String key) {
+    this.key = key;
   }
 
-  public void setPosition(int position) {
-    this.position = position;
+  public void setValue(String value) {
+    this.value = value;
   }
 
-  @Override
-  public int compareTo(ConnectionPointReference o) {
-    return (int)Math.signum(position-o.getPosition());
-  }
+
+
 
 }

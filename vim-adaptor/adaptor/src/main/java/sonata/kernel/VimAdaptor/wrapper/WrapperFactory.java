@@ -26,6 +26,7 @@
 
 package sonata.kernel.VimAdaptor.wrapper;
 
+import sonata.kernel.VimAdaptor.wrapper.OdlWrapper.OdlWrapper;
 import sonata.kernel.VimAdaptor.wrapper.openstack.OpenStackHeatWrapper;
 
 public class WrapperFactory {
@@ -48,7 +49,12 @@ public class WrapperFactory {
     if (config.getWrapperType().equals("storage")) {
       output = createStorageWrapper(config);
     }
-    System.out.println("  [WrapperFactory] - Wrapper created...");
+    if (output != null) {
+      System.out.println("  [WrapperFactory] - Wrapper created.");
+    } else {
+      System.out.println("  [WrapperFactory] - Unable to create wrapper.");
+      
+    }
     return output;
   }
 
@@ -69,7 +75,11 @@ public class WrapperFactory {
   }
 
   private static NetworkingWrapper createNetworkingWrapper(WrapperConfiguration config) {
-    return null;
+    NetworkingWrapper output = null;
+    if (config.getVimVendor().equals(NetworkingVimType.OPENDAYLIGHT.toString())) {
+      output = new OdlWrapper(config);
+    }
+    return output;
   }
 
   private static StorageWrapper createStorageWrapper(WrapperConfiguration config) {

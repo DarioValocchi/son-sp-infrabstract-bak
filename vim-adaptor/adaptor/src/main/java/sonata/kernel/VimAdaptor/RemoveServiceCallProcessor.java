@@ -57,7 +57,7 @@ public class RemoveServiceCallProcessor extends AbstractCallProcessor {
     JSONTokener tokener = new JSONTokener(message.getBody());
     JSONObject jsonObject = (JSONObject) tokener.nextValue();
     String instanceUuid = jsonObject.getString("instance_uuid");
-    String vimUuid = jsonObject.getString("vim_uuid");
+    String vimUuid = WrapperBay.getInstance().getVimRepo().getComputeVimUuidFromInstance(instanceUuid);
     ComputeWrapper wr = WrapperBay.getInstance().getComputeWrapper(vimUuid);
     wr.addObserver(this);
     wr.removeService(instanceUuid, this.getSid());
@@ -68,7 +68,7 @@ public class RemoveServiceCallProcessor extends AbstractCallProcessor {
 
   private void sendResponse(String message) {
     ServicePlatformMessage spMessage = new ServicePlatformMessage(message, "application/json",
-        this.getMessage().getTopic(), this.getMessage().getSid(), this.getMessage().getReplyTo());
+        this.getMessage().getReplyTo(), this.getMessage().getSid(), null);
     this.sendToMux(spMessage);
   }
 

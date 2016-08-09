@@ -27,7 +27,6 @@
 package sonata.kernel.VimAdaptor.wrapper.openstack;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -48,6 +47,7 @@ import sonata.kernel.VimAdaptor.commons.nsd.ConnectionPointRecord;
 import sonata.kernel.VimAdaptor.commons.nsd.InterfaceRecord;
 import sonata.kernel.VimAdaptor.commons.vnfd.VirtualDeploymentUnit;
 import sonata.kernel.VimAdaptor.commons.vnfd.VnfDescriptor;
+import sonata.kernel.VimAdaptor.wrapper.NetworkingWrapper;
 import sonata.kernel.VimAdaptor.wrapper.WrapperBay;
 import sonata.kernel.VimAdaptor.wrapper.WrapperStatusUpdate;
 
@@ -96,7 +96,7 @@ public class DeployServiceFsm implements Runnable {
     System.out.println("[OS-Deploy-FSM]   Serializing stack...");
     try {
       String stackString = mapper.writeValueAsString(stack);
-
+      System.out.println(stackString);
       String stackName = data.getNsd().getName() + data.getNsd().getInstanceUuid();
       System.out.println("[OS-Deploy-FSM]   Pushing stack to Heat...");
       String stackUuid = client.createStack(stackName, stackString);
@@ -260,6 +260,10 @@ public class DeployServiceFsm implements Runnable {
         referenceVdur.addVnfcInstance(vnfc);
       }
 
+      NetworkingWrapper netVim = (NetworkingWrapper) WrapperBay.getInstance().getVimRepo()
+          .getNetworkVim(this.data.getVimUuid()).getVimWrapper();
+
+      netVim.configureNetworking(data, composition);
 
       response.setInstanceName(stackName);
       response.setInstanceVimUuid(stackUuid);
@@ -269,24 +273,24 @@ public class DeployServiceFsm implements Runnable {
       // System.out.println("body");
 
       WrapperBay.getInstance().getVimRepo().writeInstanceEntry(response.getNsr().getId(),
-          response.getInstanceVimUuid(), response.getInstanceName());
+          response.getInstanceVimUuid(), response.getInstanceName(), data.getVimUuid());
 
       WrapperStatusUpdate update = new WrapperStatusUpdate(this.sid, "SUCCESS", body);
       wrapper.markAsChanged();
       wrapper.notifyObservers(update);
-    } catch (JsonProcessingException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       response.setRequestStatus("FAIL");
       response.setErrorCode("TranslationError");
       try {
         String body = mapper.writeValueAsString(response);
-        System.out.println("[OS-Deploy-FSM]   response created");
+        System.out.println("[OS-Deploy-FSM]   error response created");
         // System.out.println("body");
 
-        WrapperBay.getInstance().getVimRepo().writeInstanceEntry(response.getNsr().getId(),
-            response.getInstanceVimUuid(), response.getInstanceVimUuid());
+        // WrapperBay.getInstance().getVimRepo().writeInstanceEntry(response.getNsr().getId(),
+        // response.getInstanceVimUuid(), response.getInstanceVimUuid());
 
-        WrapperStatusUpdate update = new WrapperStatusUpdate(this.sid, "SUCCESS", body);
+        WrapperStatusUpdate update = new WrapperStatusUpdate(this.sid, "ERROR", body);
         wrapper.markAsChanged();
         wrapper.notifyObservers(update);
       } catch (Exception f) {
