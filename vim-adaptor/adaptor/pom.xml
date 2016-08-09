@@ -5,10 +5,9 @@
 	<groupId>sonata.kernel</groupId>
 	<artifactId>adaptor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
-	<packaging>jar</packaging>
-
+	<packaging>jar</packaging>ś
 	<name>SONATA Infrastructure Adaptor</name>
+    <url>http://www.sonata-nfv.eu/</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,6 +34,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -48,7 +48,6 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -171,6 +170,7 @@
             <type>maven-plugin</type>
         </dependency>
 	</dependencies>
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -211,5 +211,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<url>http://www.sonata-nfv.eu/</url>
+
 </project>
