@@ -180,7 +180,9 @@
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>${maven.surefire.report.version}</version>
 				<configuration>
-					<outputDirectory>${basedir}/</outputDirectory>
+					<reportsDirectories>
+                        <value>${basedir}/</value>
+                    </reportsDirectories>
 				</configuration>
 			</plugin>
 			<plugin>
