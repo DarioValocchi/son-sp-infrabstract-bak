@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.commons.DeployServiceData;
 import sonata.kernel.VimAdaptor.commons.heat.HeatPort;
 import sonata.kernel.VimAdaptor.commons.heat.StackComposition;
@@ -40,6 +41,8 @@ import java.util.HashMap;
 
 
 public class OdlWrapper extends NetworkingWrapper {
+
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(OdlWrapper.class);
 
 
   /**
@@ -119,7 +122,7 @@ public class OdlWrapper extends NetworkingWrapper {
         }
         if (inputLink == null) {
           for (VnfVirtualLink link : vnfd.getVirtualLinks()) {
-            System.out.println(link.getConnectionPointsReference());
+            Logger.info(link.getConnectionPointsReference().toString());
           }
           throw new Exception(
               "Illegal Format: unable to find the vnfd.VL connected to the VNFD.CP=" + cpRef);
@@ -168,9 +171,9 @@ public class OdlWrapper extends NetworkingWrapper {
     
     ObjectMapper mapper = new ObjectMapper(new JsonFactory());
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-    // System.out.println(compositionString);
+    // Logger.info(compositionString);
     String payload= mapper.writeValueAsString(odlList);
-    System.out.println(payload);
+    Logger.info(payload);
   }
 
 }

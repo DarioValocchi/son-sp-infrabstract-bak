@@ -27,6 +27,7 @@
 
 package sonata.kernel.VimAdaptor.wrapper.openstack;
 
+import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.commons.DeployServiceData;
 import sonata.kernel.VimAdaptor.commons.IpNetPool;
 import sonata.kernel.VimAdaptor.commons.heat.HeatModel;
@@ -54,6 +55,8 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
 
   private WrapperConfiguration config;
   private IpNetPool myPool;
+
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(OpenStackHeatWrapper.class);
 
   /**
    * Standard constructor for an Compute Wrapper of an OpenStack VIM using Heat.
@@ -317,11 +320,11 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
         if (!isMgmtPort) {
           // Resolve vnf_id from vnf_name
           String vnfId = null;
-          //System.out.println("[TRANSLATION] VNFD.name: " + vnfd.getName());
+          //Logger.info("[TRANSLATION] VNFD.name: " + vnfd.getName());
          
           for (NetworkFunction vnf : nsd.getNetworkFunctions()) {
-            //System.out.println("[TRANSLATION] NSD.network_functions.vnf_name: " + vnf.getVnfName());
-            //System.out.println("[TRANSLATION] NSD.network_functions.vnf_id: " + vnf.getVnfId());
+            //Logger.info("[TRANSLATION] NSD.network_functions.vnf_name: " + vnf.getVnfName());
+            //Logger.info("[TRANSLATION] NSD.network_functions.vnf_id: " + vnf.getVnfId());
 
             if (vnf.getVnfName().equals(vnfd.getName())) {
               vnfId = vnf.getVnfId();
@@ -421,11 +424,11 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
   public boolean removeService(String instanceUuid, String callSid) {
 
     VimRepo repo = WrapperBay.getInstance().getVimRepo();
-    System.out.println("Trying to remove NS instance: " + instanceUuid);
+    Logger.info("Trying to remove NS instance: " + instanceUuid);
     String stackName = repo.getServiceVimName(instanceUuid);
     String stackUuid = repo.getServiceVimUuid(instanceUuid);
-    System.out.println("NS instance mapped to stack name: " + stackName);
-    System.out.println("NS instance mapped to stack uuid: " + stackUuid);
+    Logger.info("NS instance mapped to stack name: " + stackName);
+    Logger.info("NS instance mapped to stack uuid: " + stackUuid);
 
     OpenStackHeatClient client = new OpenStackHeatClient(config.getVimEndpoint(),
         config.getAuthUserName(), config.getAuthPass(), config.getTenantName());

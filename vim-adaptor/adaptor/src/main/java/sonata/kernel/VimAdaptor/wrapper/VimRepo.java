@@ -28,6 +28,7 @@ package sonata.kernel.VimAdaptor.wrapper;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,6 +47,7 @@ public class VimRepo {
 
 
   private static final String configFilePath = "/etc/son-mano/postgres.config";
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(VimRepo.class);
   private Properties prop;
 
   /**
@@ -66,13 +68,13 @@ public class VimRepo {
         + prop.getProperty("repo_port") + "/" + "postgres";
     String user = prop.getProperty("user");
     String pass = prop.getProperty("pass");
-    System.out.println("[VimRepo] Connecting to postgresql at " + dbUrl);
+    Logger.info("Connecting to postgresql at " + dbUrl);
     boolean errors = false;
     try {
       Class.forName("org.postgresql.Driver");
       connection = DriverManager.getConnection(dbUrl, user, pass);
       boolean isDatabaseSet = false;
-      System.out.println("[VimRepo] Connection opened successfully. Listing databases...");
+      Logger.info("Connection opened successfully. Listing databases...");
       String sql;
       sql = "SELECT datname FROM pg_catalog.pg_database;";
       findDatabaseStmt = connection.createStatement();
@@ -86,17 +88,17 @@ public class VimRepo {
       rs.close();
 
       if (!isDatabaseSet) {
-        System.out.println("[VimRepo] Database not set. Creating database...");
+        Logger.info("Database not set. Creating database...");
         sql = "CREATE DATABASE vimregistry;";
         stmt = connection.createStatement();
         stmt.execute(sql);
         sql = "GRANT ALL PRIVILEGES ON DATABASE vimregistry TO " + user + ";";
         createDatabaseStmt = connection.createStatement();
 
-        System.out.println("[VimRepo] Statement:" + createDatabaseStmt.toString());
+        Logger.info("Statement:" + createDatabaseStmt.toString());
         createDatabaseStmt.execute(sql);
       } else {
-        System.out.println("[VimRepo] Database already set.");
+        Logger.info("Database already set.");
       }
       connection.close();
 
@@ -104,7 +106,7 @@ public class VimRepo {
 
       dbUrl = "jdbc:postgresql://" + prop.getProperty("repo_host") + ":"
           + prop.getProperty("repo_port") + "/" + "vimregistry";
-      System.out.println("[VimRepo] Connecting to the new database: " + dbUrl);
+      Logger.info("Connecting to the new database: " + dbUrl);
       connection = DriverManager.getConnection(dbUrl, user, pass);
 
 
@@ -145,10 +147,10 @@ public class VimRepo {
       }
 
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       errors = true;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       errors = true;
     } finally {
       try {
@@ -165,14 +167,13 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
-
+        Logger.error(e.getMessage(), e);
       }
     }
     if (!errors) {
-      System.out.println("[VimRepo] Environment created successfully");
+      Logger.info("Environment created successfully");
     } else {
-      System.out.println("[VimRepo] Errors creating the environment");
+      Logger.info("Errors creating the environment");
     }
     return;
   }
@@ -218,10 +219,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -232,11 +233,11 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
       }
     }
-    System.out.println("[VimRepo] Records created successfully");
+    Logger.info("Records created successfully");
 
     return out;
   }
@@ -267,10 +268,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+     Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);;
       out = false;
     } finally {
       try {
@@ -281,14 +282,13 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
 
       }
     }
-    System.out.println("Operation done successfully");
+    Logger.info("Operation done successfully");
     return out;
-
   }
 
   /**
@@ -334,10 +334,10 @@ public class VimRepo {
       stmt.executeUpdate(sql);
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -348,12 +348,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
 
       }
     }
-    System.out.println("[VimRepo] Records created successfully");
+    Logger.info("Records created successfully");
 
     return out;
   }
@@ -416,10 +416,10 @@ public class VimRepo {
         output = null;
       }
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } finally {
       try {
@@ -433,12 +433,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         output = null;
 
       }
     }
-    System.out.println("Operation done successfully");
+    Logger.info("Operation done successfully");
     return output;
 
   }
@@ -471,10 +471,10 @@ public class VimRepo {
       }
 
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = null;
     } finally {
       try {
@@ -488,11 +488,11 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
 
       }
     }
-    System.out.println("Operation done successfully");
+    Logger.info("Operation done successfully");
     return out;
   }
 
@@ -525,10 +525,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -539,12 +539,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
       }
     }
     if (!out) {
-      System.out.println("[VimRepo] Records created successfully");
+      Logger.info("Records created successfully");
     }
 
     return out;
@@ -605,10 +605,10 @@ public class VimRepo {
         output = null;
       }
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } finally {
       try {
@@ -622,12 +622,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         output = null;
 
       }
     }
-    System.out.println("Operation done successfully");
+    Logger.info("Operation done successfully");
     return output;
     
     }
@@ -668,10 +668,10 @@ public class VimRepo {
         output = null;
       }
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } finally {
       try {
@@ -685,13 +685,13 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         output = null;
 
       }
     }
     if (output != null) {
-      System.out.println("Operation done successfully");
+      Logger.info("Operation done successfully");
     }
     return output;
 
@@ -733,10 +733,10 @@ public class VimRepo {
         output = null;
       }
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } finally {
       try {
@@ -750,13 +750,13 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         output = null;
 
       }
     }
     if (output != null) {
-      System.out.println("Operation done successfully");
+      Logger.info("Operation done successfully");
     }
     return output;
 
@@ -796,10 +796,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -810,12 +810,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
       }
     }
     if (!out) {
-      System.out.println("[VimRepo] Records created successfully");
+      Logger.info("Records created successfully");
     }
 
     return out;
@@ -855,10 +855,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -869,12 +869,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
       }
     }
     if (!out) {
-      System.out.println("[VimRepo] Records created successfully");
+      Logger.info("Records created successfully");
     }
 
     return out;
@@ -908,10 +908,10 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       out = false;
     } finally {
       try {
@@ -922,12 +922,12 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         out = false;
       }
     }
     if (!out) {
-      System.out.println("[VimRepo] Records deleted successfully");
+      Logger.info("Records deleted successfully");
     }
 
     return out;
@@ -966,10 +966,10 @@ public class VimRepo {
         output = null;
       }
     } catch (SQLException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } catch (ClassNotFoundException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      Logger.error(e.getMessage(), e);
       output = null;
     } finally {
       try {
@@ -983,13 +983,13 @@ public class VimRepo {
           connection.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        Logger.error(e.getMessage(), e);
         output = null;
 
       }
     }
     if (output != null) {
-      System.out.println("Operation done successfully");
+      Logger.info("Operation done successfully");
     }
     return output;
 
@@ -1014,7 +1014,7 @@ public class VimRepo {
       prop.put("user", user);
       prop.put("pass", pass);
     } catch (FileNotFoundException e) {
-      System.err.println("Unable to load Postregs Config file");
+      Logger.error("Unable to load Postregs Config file", e);
     }
 
     return prop;

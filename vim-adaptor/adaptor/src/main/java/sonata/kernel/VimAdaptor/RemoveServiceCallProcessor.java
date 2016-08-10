@@ -29,6 +29,7 @@ package sonata.kernel.VimAdaptor;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.messaging.ServicePlatformMessage;
 import sonata.kernel.VimAdaptor.wrapper.ComputeWrapper;
 import sonata.kernel.VimAdaptor.wrapper.WrapperBay;
@@ -37,6 +38,8 @@ import sonata.kernel.VimAdaptor.wrapper.WrapperStatusUpdate;
 import java.util.Observable;
 
 public class RemoveServiceCallProcessor extends AbstractCallProcessor {
+
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(RemoveServiceCallProcessor.class);
 
   /**
    * Generate a CallProcessor to process an API call to create a new VIM wrapper
@@ -76,8 +79,7 @@ public class RemoveServiceCallProcessor extends AbstractCallProcessor {
   public void update(Observable observable, Object arg) {
 
     WrapperStatusUpdate update = (WrapperStatusUpdate) arg;
-    System.out.println("[RemoveService] Received an update:");
-    System.out.println(update.getBody());
+    Logger.info("Received an update:\n" + update.getBody());
 
     sendResponse("{\"request_status\":\"" + update.getBody() + "\"}");
     return;

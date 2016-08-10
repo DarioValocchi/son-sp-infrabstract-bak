@@ -26,10 +26,13 @@
 
 package sonata.kernel.VimAdaptor.wrapper;
 
+import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.wrapper.OdlWrapper.OdlWrapper;
 import sonata.kernel.VimAdaptor.wrapper.openstack.OpenStackHeatWrapper;
 
 public class WrapperFactory {
+
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(WrapperFactory.class);
 
   /**
    * Uses the parser configuration to create the relevant Wrapper.
@@ -39,7 +42,7 @@ public class WrapperFactory {
    */
   public static Wrapper createWrapper(WrapperConfiguration config) {
     Wrapper output = null;
-    System.out.println("  [WrapperFactory] - creating wrapper...");
+    Logger.info("Creating wrapper...");
     if (config.getWrapperType().equals("compute")) {
       output = createComputeWrapper(config);
     }
@@ -50,9 +53,9 @@ public class WrapperFactory {
       output = createStorageWrapper(config);
     }
     if (output != null) {
-      System.out.println("  [WrapperFactory] - Wrapper created.");
+      Logger.info("Wrapper created.");
     } else {
-      System.out.println("  [WrapperFactory] - Unable to create wrapper.");
+      Logger.info("Unable to create wrapper.");
       
     }
     return output;
