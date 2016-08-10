@@ -44,8 +44,6 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<source>1.7</source>
-					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
