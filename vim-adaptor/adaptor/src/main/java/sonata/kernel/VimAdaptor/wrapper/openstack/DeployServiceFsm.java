@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.commons.DeployServiceData;
 import sonata.kernel.VimAdaptor.commons.DeployServiceResponse;
 import sonata.kernel.VimAdaptor.commons.ServiceRecord;
@@ -62,6 +63,7 @@ public class DeployServiceFsm implements Runnable {
   private OpenStackHeatClient client;
   private HeatTemplate stack;
   private static final int maxCounter = 10;
+  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(DeployServiceFsm.class);
 
 
   /**
@@ -87,18 +89,18 @@ public class DeployServiceFsm implements Runnable {
   public void run() {
     DeployServiceResponse response = new DeployServiceResponse();
 
-    System.out.println("[OS-Deploy-FSM] Deploying new stack");
+    Logger.info("Deploying new stack");
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     mapper.disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS);
     mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
     mapper.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
     mapper.setSerializationInclusion(Include.NON_NULL);
-    System.out.println("[OS-Deploy-FSM]   Serializing stack...");
+    Logger.info("Serializing stack...");
     try {
       String stackString = mapper.writeValueAsString(stack);
-      System.out.println(stackString);
+      Logger.info(stackString);
       String stackName = data.getNsd().getName() + data.getNsd().getInstanceUuid();
-      System.out.println("[OS-Deploy-FSM]   Pushing stack to Heat...");
+      Logger.info("Pushing stack to Heat...");
       String stackUuid = client.createStack(stackName, stackString);
 
       if (stackUuid == null) {
@@ -114,7 +116,7 @@ public class DeployServiceFsm implements Runnable {
       while ((status == null || !status.equals("CREATE_COMPLETE")
           || !status.equals("CREATE_FAILED")) && counter < DeployServiceFsm.maxCounter) {
         status = client.getStackStatus(stackName, stackUuid);
-        System.out.println("[OS-Deploy-FSM]   Status of stack " + stackUuid + ": " + status);
+        Logger.info("Status of stack " + stackUuid + ": " + status);
         if (status != null
             && (status.equals("CREATE_COMPLETE") || status.equals("CREATE_FAILED"))) {
           break;
@@ -122,8 +124,7 @@ public class DeployServiceFsm implements Runnable {
         try {
           Thread.sleep(wait);
         } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          Logger.error(e.getMessage(), e);
         }
         counter++;
         wait *= 2;
@@ -149,13 +150,12 @@ public class DeployServiceFsm implements Runnable {
       wait = 1000;
       StackComposition composition = null;
       while (composition == null && counter < DeployServiceFsm.maxCounter) {
-        System.out.println("[OS-Deploy-FSM]   getting composition of stack " + stackUuid);
+        Logger.info("Getting composition of stack " + stackUuid);
         composition = client.getStackComposition(stackName, stackUuid);
         try {
           Thread.sleep(wait);
         } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          Logger.error(e.getMessage(), e);
         }
         counter++;
         wait *= 2;
@@ -176,7 +176,7 @@ public class DeployServiceFsm implements Runnable {
       Hashtable<String, VduRecord> vdurTable = new Hashtable<String, VduRecord>();
 
       // Create the response
-      System.out.println("[OS-Deploy-FSM]   creating deploy response");
+      Logger.info("Creating deploy response");
       ServiceRecord sr = new ServiceRecord();
       sr.setStatus(Status.offline);
       sr.setDescriptorVersion("nsr-schema-01");
@@ -238,11 +238,11 @@ public class DeployServiceFsm implements Runnable {
               InterfaceRecord ip = new InterfaceRecord();
               if (port.getFloatinIp() != null) {
                 ip.setAddress(port.getFloatinIp());
-                // System.out.println("Port:" + port.getPortName() + "- Addr: " +
+                // Logger.info("Port:" + port.getPortName() + "- Addr: " +
                 // port.getFloatinIp());
               } else {
                 ip.setAddress(port.getIpAddress());
-                // System.out.println("Port:" + port.getPortName() + "- Addr: " +
+                // Logger.info("Port:" + port.getPortName() + "- Addr: " +
                 // port.getFloatinIp());
                 ip.setNetmask("255.255.255.248");
 
@@ -269,8 +269,8 @@ public class DeployServiceFsm implements Runnable {
       response.setInstanceVimUuid(stackUuid);
       response.setRequestStatus("DEPLOYED");
       String body = mapper.writeValueAsString(response);
-      System.out.println("[OS-Deploy-FSM]   response created");
-      // System.out.println("body");
+      Logger.info("Response created");
+      // Logger.info("body");
 
       WrapperBay.getInstance().getVimRepo().writeInstanceEntry(response.getNsr().getId(),
           response.getInstanceVimUuid(), response.getInstanceName(), data.getVimUuid());
@@ -279,13 +279,13 @@ public class DeployServiceFsm implements Runnable {
       wrapper.markAsChanged();
       wrapper.notifyObservers(update);
     } catch (Exception e) {
-      e.printStackTrace();
+      Logger.error(e.getMessage(), e);
       response.setRequestStatus("FAIL");
       response.setErrorCode("TranslationError");
       try {
         String body = mapper.writeValueAsString(response);
-        System.out.println("[OS-Deploy-FSM]   error response created");
-        // System.out.println("body");
+        Logger.info("Error response created");
+        // Logger.info("body");
 
         // WrapperBay.getInstance().getVimRepo().writeInstanceEntry(response.getNsr().getId(),
         // response.getInstanceVimUuid(), response.getInstanceVimUuid());
@@ -294,7 +294,7 @@ public class DeployServiceFsm implements Runnable {
         wrapper.markAsChanged();
         wrapper.notifyObservers(update);
       } catch (Exception f) {
-        System.out.println("Error while handling Error!");
+        Logger.error("Error while handling Error!", e);
       }
     }
   }

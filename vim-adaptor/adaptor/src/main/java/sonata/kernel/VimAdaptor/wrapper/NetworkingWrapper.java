@@ -42,8 +42,8 @@ public abstract class NetworkingWrapper extends AbstractWrapper implements Wrapp
   /**
    * Configure the SFC and networking aspects of the service
    * 
-   * @param the service deployment descriptors
-   * @param the composition of the deployed service
+   * @param data the service deployment descriptors
+   * @param composition the composition of the deployed service
    * @throws Exception
    * 
    */
