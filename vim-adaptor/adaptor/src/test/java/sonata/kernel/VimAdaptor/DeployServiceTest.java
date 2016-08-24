@@ -390,7 +390,7 @@ public class DeployServiceTest implements MessageReceiver {
    * 
    * @throws IOException
    */
-  @Ignore
+  @Test
   public void testDeployServiceOpenStack() throws IOException, InterruptedException {
 
     BlockingQueue<ServicePlatformMessage> muxQueue =

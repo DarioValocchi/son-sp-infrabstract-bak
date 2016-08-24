@@ -6,7 +6,7 @@
 	<artifactId>adaptor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>SONATA Infrastructure Adaptor</name>
+	<name>SONATA VIM Infrastructure Adaptor</name>
     <url>http://www.sonata-nfv.eu/</url>
 
 	<properties>

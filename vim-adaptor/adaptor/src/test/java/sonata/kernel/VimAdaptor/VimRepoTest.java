@@ -31,10 +31,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import sonata.kernel.VimAdaptor.wrapper.MockWrapper;
-import sonata.kernel.VimAdaptor.wrapper.OdlWrapper.OdlWrapper;
 import sonata.kernel.VimAdaptor.wrapper.VimRepo;
 import sonata.kernel.VimAdaptor.wrapper.WrapperConfiguration;
 import sonata.kernel.VimAdaptor.wrapper.WrapperRecord;
+import sonata.kernel.VimAdaptor.wrapper.odlWrapper.OdlWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;

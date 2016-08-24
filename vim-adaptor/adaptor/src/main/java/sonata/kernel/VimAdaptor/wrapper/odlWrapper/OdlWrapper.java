@@ -15,7 +15,7 @@
  *       and limitations under the License.
  * 
  */
-package sonata.kernel.VimAdaptor.wrapper.OdlWrapper;
+package sonata.kernel.VimAdaptor.wrapper.odlWrapper;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;

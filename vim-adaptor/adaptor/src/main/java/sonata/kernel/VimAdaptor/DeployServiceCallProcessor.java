@@ -44,8 +44,11 @@ import java.util.Observable;
 
 public class DeployServiceCallProcessor extends AbstractCallProcessor {
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(DeployServiceCallProcessor.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(DeployServiceCallProcessor.class);
 
+  private DeployServiceData data;
+  
   /**
    * Create a CallProcessor to process a DeployService API call.
    * 
@@ -63,7 +66,7 @@ public class DeployServiceCallProcessor extends AbstractCallProcessor {
     Logger.info("Call received...");
     // parse the payload to get Wrapper UUID and NSD/VNFD from the request body
     Logger.info("Parsing payload...");
-    DeployServiceData data = null;
+    data = null;
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     SimpleModule module = new SimpleModule();
     module.addDeserializer(Unit.class, new UnitDeserializer());
@@ -105,16 +108,18 @@ public class DeployServiceCallProcessor extends AbstractCallProcessor {
       Logger.info("Received an update from the wrapper...");
       if (update.getStatus().equals("SUCCESS")) {
         Logger.info("Deploy " + this.getSid() + " succeed");
-        Logger.info("Sending response...");
+
+        // Sending a hook to trigger the WIM adaptor
+        Logger.info("Sending partial response to WIM adaptor...");
         ServicePlatformMessage response = new ServicePlatformMessage(update.getBody(),
-            "application/x-yaml", "infrastructure.service.deploy", this.getSid(), null);
+            "application/x-yaml", "infrastructure.wan.configure", this.getSid(), this.getMessage().getReplyTo());
         this.sendToMux(response);
       } else if (update.getStatus().equals("ERROR")) {
         Logger.warn("Deploy " + this.getSid() + " error");
         Logger.warn("Pushing back error...");
         ServicePlatformMessage response = new ServicePlatformMessage(
             "{\"request_status\":\"fail\",\"message\":\"" + update.getBody() + "\"}",
-            "application/x-yaml", "infrastructure.service.deploy", this.getSid(), null);
+            "application/x-yaml", this.getMessage().getReplyTo(), this.getSid(), null);
         this.sendToMux(response);
       } else {
         Logger.info("Deploy " + this.getSid() + " - " + update.getStatus());
@@ -124,5 +129,6 @@ public class DeployServiceCallProcessor extends AbstractCallProcessor {
       // TODO handle other update from the compute wrapper;
     }
   }
+
 
 }

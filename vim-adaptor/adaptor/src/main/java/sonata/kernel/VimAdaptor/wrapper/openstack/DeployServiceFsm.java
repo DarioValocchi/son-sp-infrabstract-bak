@@ -265,6 +265,7 @@ public class DeployServiceFsm implements Runnable {
 
       netVim.configureNetworking(data, composition);
 
+      response.setVimUuid(data.getVimUuid());
       response.setInstanceName(stackName);
       response.setInstanceVimUuid(stackUuid);
       response.setRequestStatus("DEPLOYED");

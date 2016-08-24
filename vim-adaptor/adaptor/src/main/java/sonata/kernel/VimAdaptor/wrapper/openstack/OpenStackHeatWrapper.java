@@ -227,7 +227,7 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
               vnfd.getName() + ":" + link.getId() + ":subnet:" + nsd.getInstanceUuid());
           cidr = subnets.get(subnetIndex);
           subnet.putProperty("cidr", cidr);
-          subnet.putProperty("gateway_ip", myPool.getGateway(cidr));
+          //subnet.putProperty("gateway_ip", myPool.getGateway(cidr));
           // subnet.putProperty("cidr", "192.168." + subnetIndex + ".0/24");
           // subnet.putProperty("gateway_ip", "192.168." + subnetIndex + ".1");
           subnetIndex++;

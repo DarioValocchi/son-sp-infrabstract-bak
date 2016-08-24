@@ -27,7 +27,8 @@
 package sonata.kernel.VimAdaptor.wrapper;
 
 import org.slf4j.LoggerFactory;
-import sonata.kernel.VimAdaptor.wrapper.OdlWrapper.OdlWrapper;
+
+import sonata.kernel.VimAdaptor.wrapper.odlWrapper.OdlWrapper;
 import sonata.kernel.VimAdaptor.wrapper.openstack.OpenStackHeatWrapper;
 
 public class WrapperFactory {
