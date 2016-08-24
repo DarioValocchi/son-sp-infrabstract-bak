@@ -57,8 +57,7 @@ public class RabbitMqProducer extends AbstractMsgBusProducer {
   }
 
   private final static String configFilePath = "/etc/son-mano/broker.config";
-  private final static org.slf4j.Logger Logger =
-      LoggerFactory.getLogger(RabbitMqProducer.class);
+  private final static org.slf4j.Logger Logger = LoggerFactory.getLogger(RabbitMqProducer.class);
 
   private Connection connection;
   private Properties brokerConfig;
@@ -141,7 +140,7 @@ public class RabbitMqProducer extends AbstractMsgBusProducer {
       prop.put("broker_url", brokerUrl);
       prop.put("exchange", exchange);
     } catch (FileNotFoundException e) {
-      Logger.error("Unable to load Broker Config file",e);
+      Logger.error("Unable to load Broker Config file", e);
       System.exit(1);
     }
 

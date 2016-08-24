@@ -55,15 +55,15 @@ public class WimRepoTest {
   public void testCreateWimRepo() {
 
     repoInstance = new WimRepo();
-    
+
     ArrayList<String> wims = repoInstance.listWims();
     Assert.assertNotNull("Unable to retrieve an empy list. SQL exception occurred", wims);
-    
+
   }
 
   @Test
   public void testAddWim() {
-    
+
     repoInstance = new WimRepo();
     WrapperConfiguration config = new WrapperConfiguration();
     config.setWimEndpoint("x.x.x.x");
@@ -87,7 +87,7 @@ public class WimRepoTest {
   }
 
   @Test
-  public void testServiceSegmentRetrival(){
+  public void testServiceSegmentRetrival() {
     repoInstance = new WimRepo();
     WrapperConfiguration config = new WrapperConfiguration();
     config.setWimEndpoint("x.x.x.x");
@@ -108,17 +108,19 @@ public class WimRepoTest {
     servicedSegments.add("B");
     config.setServicedSegments(servicedSegments);
     out = repoInstance.writeWimEntry(config.getUuid(), record);
-    
-    WrapperRecord recordA =repoInstance.readWimEntryFromNetSegment("A");
-    Assert.assertTrue("Unable to retrieve the correct WIM for segment A",recordA.getConfig().getUuid().equals("1"));
-    WrapperRecord recordB =repoInstance.readWimEntryFromNetSegment("B");
-    Assert.assertTrue("Unable to retrieve the correct WIM for segment B",recordB.getConfig().getUuid().equals("2"));
+
+    WrapperRecord recordA = repoInstance.readWimEntryFromNetSegment("A");
+    Assert.assertTrue("Unable to retrieve the correct WIM for segment A",
+        recordA.getConfig().getUuid().equals("1"));
+    WrapperRecord recordB = repoInstance.readWimEntryFromNetSegment("B");
+    Assert.assertTrue("Unable to retrieve the correct WIM for segment B",
+        recordB.getConfig().getUuid().equals("2"));
     out = repoInstance.removeWimEntry("1");
     Assert.assertTrue("unable to remove wim 1", out);
     out = repoInstance.removeWimEntry("2");
     Assert.assertTrue("unable to remove wim 2", out);
   }
-  
+
   @Test
   public void testListWims() {
     repoInstance = new WimRepo();
@@ -131,7 +133,7 @@ public class WimRepoTest {
     config.setWrapperType("compute");
     ArrayList<String> servicedSegments = new ArrayList<String>();
     servicedSegments.add("1");
-    
+
     config.setServicedSegments(servicedSegments);
     WrapperRecord record = new WrapperRecord(new VtnWrapper(config), config);
     boolean out = repoInstance.writeWimEntry(config.getUuid(), record);
@@ -141,7 +143,7 @@ public class WimRepoTest {
     servicedSegments = new ArrayList<String>();
     servicedSegments.add("2");
     config.setServicedSegments(servicedSegments);
-    
+
     record = new WrapperRecord(new VtnWrapper(config), config);
     out = repoInstance.writeWimEntry(config.getUuid(), record);
     Assert.assertTrue("Unable to write a wim", out);

@@ -105,7 +105,7 @@ public class RabbitMqProducer extends AbstractMsgBusProducer {
           .correlationId(message.getSid()).build();
       channel.basicPublish(exchangeName, message.getTopic(), properties,
           message.getBody().getBytes("UTF-8"));
-      //Logger.info("Sending message: " + message + "\n\r - Properties:" + properties);
+      // Logger.info("Sending message: " + message + "\n\r - Properties:" + properties);
     } catch (Exception e) {
       Logger.error(e.getMessage(), e);
       out = false;

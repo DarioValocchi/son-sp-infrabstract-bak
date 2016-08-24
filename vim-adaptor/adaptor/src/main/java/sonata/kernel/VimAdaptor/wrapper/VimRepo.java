@@ -118,7 +118,8 @@ public class VimRepo {
       while (rs.next()) {
         String tablename = rs.getString("tablename");
         if (tablename.equals("vim") || tablename.equals("VIM") || tablename.equals("instances")
-            || tablename.equals("INSTANCES")|| tablename.equals("link_vim")|| tablename.equals("LINK_VIM")) {
+            || tablename.equals("INSTANCES") || tablename.equals("link_vim")
+            || tablename.equals("LINK_VIM")) {
           isEnvironmentSet = true;
           break;
         }
@@ -130,15 +131,12 @@ public class VimRepo {
         stmt = connection.createStatement();
         sql = "CREATE TABLE vim " + "(UUID TEXT PRIMARY KEY NOT NULL," + " TYPE TEXT NOT NULL,"
             + " VENDOR TEXT NOT NULL," + " ENDPOINT TEXT NOT NULL," + " USERNAME TEXT NOT NULL,"
-            + " TENANT TEXT NOT NULL," + " TENANT_EXT_NET TEXT,"
-            + " TENANT_EXT_ROUTER TEXT," + " PASS TEXT," + " AUTHKEY TEXT);";
+            + " TENANT TEXT NOT NULL," + " TENANT_EXT_NET TEXT," + " TENANT_EXT_ROUTER TEXT,"
+            + " PASS TEXT," + " AUTHKEY TEXT);";
         stmt.executeUpdate(sql);
-        sql = "CREATE TABLE instances " + "("
-            + "INSTANCE_UUID TEXT PRIMARY KEY NOT NULL,"
-            + " VIM_INSTANCE_UUID TEXT NOT NULL," 
-            + " VIM_INSTANCE_NAME TEXT NOT NULL,"
-            + " VIM_UUID TEXT NOT NULL"
-            + ");";
+        sql = "CREATE TABLE instances " + "(" + "INSTANCE_UUID TEXT PRIMARY KEY NOT NULL,"
+            + " VIM_INSTANCE_UUID TEXT NOT NULL," + " VIM_INSTANCE_NAME TEXT NOT NULL,"
+            + " VIM_UUID TEXT NOT NULL" + ");";
         stmt.executeUpdate(sql);
         sql = "CREATE TABLE link_vim " + "(COMPUTE_UUID TEXT PRIMARY KEY NOT NULL,"
             + " NETWORKING_UUID TEXT NOT NULL);";
@@ -268,7 +266,7 @@ public class VimRepo {
       stmt.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-     Logger.error(e.getMessage(), e);
+      Logger.error(e.getMessage(), e);
       out = false;
     } catch (ClassNotFoundException e) {
       Logger.error(e.getMessage(), e);;
@@ -503,7 +501,7 @@ public class VimRepo {
    * @param networkingUuid the uuid of the networking wrapper
    * @return true for success
    */
-  public boolean writeNetworkVimLink(String computeUuid, String networkingUuid){
+  public boolean writeNetworkVimLink(String computeUuid, String networkingUuid) {
     boolean out = true;
 
     Connection connection = null;
@@ -517,8 +515,7 @@ public class VimRepo {
               prop.getProperty("user"), prop.getProperty("pass"));
       connection.setAutoCommit(false);
 
-      String sql =
-          "INSERT INTO LINK_VIM (COMPUTE_UUID, NETWORKING_UUID) " + "VALUES (?, ?);";
+      String sql = "INSERT INTO LINK_VIM (COMPUTE_UUID, NETWORKING_UUID) " + "VALUES (?, ?);";
       stmt = connection.prepareStatement(sql);
       stmt.setString(1, computeUuid);
       stmt.setString(2, networkingUuid);
@@ -549,7 +546,7 @@ public class VimRepo {
 
     return out;
   }
-  
+
   /**
    * Get the NetworkingWrapper associated to the given computeVim.
    * 
@@ -570,7 +567,8 @@ public class VimRepo {
               prop.getProperty("user"), prop.getProperty("pass"));
       connection.setAutoCommit(false);
 
-      stmt = connection.prepareStatement("SELECT * FROM vim,link_vim WHERE vim.UUID=LINK_VIM.NETWORKING_UUID AND LINK_VIM.COMPUTE_UUID=?;");
+      stmt = connection.prepareStatement(
+          "SELECT * FROM vim,link_vim WHERE vim.UUID=LINK_VIM.NETWORKING_UUID AND LINK_VIM.COMPUTE_UUID=?;");
       stmt.setString(1, computeUuid);
       rs = stmt.executeQuery();
 
@@ -629,9 +627,9 @@ public class VimRepo {
     }
     Logger.info("Operation done successfully");
     return output;
-    
-    }
-  
+
+  }
+
   /**
    * Get the UUID used by the VIM to identify the given service instance.
    * 
@@ -656,7 +654,8 @@ public class VimRepo {
               prop.getProperty("user"), prop.getProperty("pass"));
       connection.setAutoCommit(false);
 
-      stmt = connection.prepareStatement("SELECT VIM_INSTANCE_UUID FROM INSTANCES WHERE INSTANCE_UUID=?;");
+      stmt = connection
+          .prepareStatement("SELECT VIM_INSTANCE_UUID FROM INSTANCES WHERE INSTANCE_UUID=?;");
       stmt.setString(1, instanceUuid);
       rs = stmt.executeQuery();
 
@@ -721,7 +720,8 @@ public class VimRepo {
               prop.getProperty("user"), prop.getProperty("pass"));
       connection.setAutoCommit(false);
 
-      stmt = connection.prepareStatement("SELECT VIM_INSTANCE_NAME FROM INSTANCES WHERE INSTANCE_UUID=?;");
+      stmt = connection
+          .prepareStatement("SELECT VIM_INSTANCE_NAME FROM INSTANCES WHERE INSTANCE_UUID=?;");
       stmt.setString(1, instanceUuid);
       rs = stmt.executeQuery();
 
@@ -772,7 +772,8 @@ public class VimRepo {
    * 
    * @return true for process success
    */
-  public boolean writeInstanceEntry(String instanceUuid, String vimInstanceUuid, String vimInstanceName, String vimUuid) {
+  public boolean writeInstanceEntry(String instanceUuid, String vimInstanceUuid,
+      String vimInstanceName, String vimUuid) {
     boolean out = true;
 
     Connection connection = null;
@@ -787,7 +788,8 @@ public class VimRepo {
       connection.setAutoCommit(false);
 
       String sql =
-          "INSERT INTO INSTANCES (INSTANCE_UUID, VIM_INSTANCE_UUID, VIM_INSTANCE_NAME,VIM_UUID) " + "VALUES (?, ?, ?, ?);";
+          "INSERT INTO INSTANCES (INSTANCE_UUID, VIM_INSTANCE_UUID, VIM_INSTANCE_NAME,VIM_UUID) "
+              + "VALUES (?, ?, ?, ?);";
       stmt = connection.prepareStatement(sql);
       stmt.setString(1, instanceUuid);
       stmt.setString(2, vimInstanceUuid);
@@ -831,7 +833,8 @@ public class VimRepo {
    * 
    * @return true for process success
    */
-  public boolean updateInstanceEntry(String instanceUuid, String vimInstanceUuid, String vimInstanceName, String vimUuid) {
+  public boolean updateInstanceEntry(String instanceUuid, String vimInstanceUuid,
+      String vimInstanceName, String vimUuid) {
     boolean out = true;
 
     Connection connection = null;
@@ -845,8 +848,8 @@ public class VimRepo {
               prop.getProperty("user"), prop.getProperty("pass"));
       connection.setAutoCommit(false);
 
-      String sql =
-          "UPDATE INSTANCES set (VIM_INSTANCE_UUID, VIM_INSTANCE_NAME, VIM_UUID) " + "VALUES (?, ?, ?) WHERE INSTANCE_UUID=?;";
+      String sql = "UPDATE INSTANCES set (VIM_INSTANCE_UUID, VIM_INSTANCE_NAME, VIM_UUID) "
+          + "VALUES (?, ?, ?) WHERE INSTANCE_UUID=?;";
       stmt = connection.prepareStatement(sql);
       stmt.setString(1, vimInstanceUuid);
       stmt.setString(2, vimInstanceName);
@@ -1019,5 +1022,5 @@ public class VimRepo {
 
     return prop;
   }
-  
+
 }

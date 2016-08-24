@@ -48,7 +48,7 @@ public class DeployServiceCallProcessor extends AbstractCallProcessor {
       LoggerFactory.getLogger(DeployServiceCallProcessor.class);
 
   private DeployServiceData data;
-  
+
   /**
    * Create a CallProcessor to process a DeployService API call.
    * 
@@ -111,8 +111,9 @@ public class DeployServiceCallProcessor extends AbstractCallProcessor {
 
         // Sending a hook to trigger the WIM adaptor
         Logger.info("Sending partial response to WIM adaptor...");
-        ServicePlatformMessage response = new ServicePlatformMessage(update.getBody(),
-            "application/x-yaml", "infrastructure.wan.configure", this.getSid(), this.getMessage().getReplyTo());
+        ServicePlatformMessage response =
+            new ServicePlatformMessage(update.getBody(), "application/x-yaml",
+                "infrastructure.wan.configure", this.getSid(), this.getMessage().getReplyTo());
         this.sendToMux(response);
       } else if (update.getStatus().equals("ERROR")) {
         Logger.warn("Deploy " + this.getSid() + " error");

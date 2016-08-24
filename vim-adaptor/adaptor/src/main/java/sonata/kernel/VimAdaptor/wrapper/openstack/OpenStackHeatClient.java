@@ -124,7 +124,8 @@ public class OpenStackHeatClient {
       }
 
     } catch (Exception e) {
-      Logger.error("Runtime error creating stack : " + stackName + " error message: " + e.getMessage());
+      Logger.error(
+          "Runtime error creating stack : " + stackName + " error message: " + e.getMessage());
     }
 
     return uuid;
@@ -200,9 +201,11 @@ public class OpenStackHeatClient {
       stdInput.close();
       process.destroy();
 
-      Logger.info("Request was sent for stack: " + stackName + " with uuid: " + uuid + " : " + isDeleted);
+      Logger.info(
+          "Request was sent for stack: " + stackName + " with uuid: " + uuid + " : " + isDeleted);
     } catch (Exception e) {
-      Logger.error("Runtime error when deleting stack : " + stackName + " error message: " + e.getMessage());
+      Logger.error(
+          "Runtime error when deleting stack : " + stackName + " error message: " + e.getMessage());
     }
 
 

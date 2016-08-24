@@ -49,7 +49,7 @@ public abstract class AbstractMsgBusConsumer implements MsgBusConsumer {
    * process the message coming from the MsgBus and enqueue it towards the dispatcher.
    * 
    * @param message a string with the body of the message
-     @param contentType the type of content
+   * @param contentType the type of content
    * @param topic from which the message has been received
    * @param sid the session id of the message
    * @param replyTo the topic to which reply

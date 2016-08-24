@@ -41,5 +41,5 @@ public class FsmResourceRequirements {
     this.dockerVersion = dockerVersion;
   }
 
-  
+
 }

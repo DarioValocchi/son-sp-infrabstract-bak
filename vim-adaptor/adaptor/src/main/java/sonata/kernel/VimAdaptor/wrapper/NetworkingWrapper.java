@@ -47,6 +47,7 @@ public abstract class NetworkingWrapper extends AbstractWrapper implements Wrapp
    * @throws Exception
    * 
    */
-  public abstract void configureNetworking(DeployServiceData data, StackComposition composition) throws Exception;
+  public abstract void configureNetworking(DeployServiceData data, StackComposition composition)
+      throws Exception;
 
 }

@@ -50,8 +50,7 @@ import java.util.concurrent.TimeoutException;
 public class RabbitMqConsumer extends AbstractMsgBusConsumer implements MsgBusConsumer, Runnable {
 
   private final static String configFilePath = "/etc/son-mano/broker.config";
-  private final static org.slf4j.Logger Logger =
-      LoggerFactory.getLogger(RabbitMqConsumer.class);
+  private final static org.slf4j.Logger Logger = LoggerFactory.getLogger(RabbitMqConsumer.class);
 
   DefaultConsumer consumer;
   private Connection connection;
@@ -73,8 +72,7 @@ public class RabbitMqConsumer extends AbstractMsgBusConsumer implements MsgBusCo
     }
     try {
 
-      Logger.info("RabbitMqConsumer - connecting to: "
-          + brokerConfig.getProperty("broker_url"));
+      Logger.info("RabbitMqConsumer - connecting to: " + brokerConfig.getProperty("broker_url"));
       cf.setUri(brokerConfig.getProperty("broker_url"));
       connection = cf.newConnection();
       channel = connection.createChannel();
@@ -167,7 +165,7 @@ public class RabbitMqConsumer extends AbstractMsgBusConsumer implements MsgBusCo
       prop.put("broker_url", brokerUrl);
       prop.put("exchange", exchange);
     } catch (FileNotFoundException e) {
-      Logger.error("Unable to load Broker Config file",e);
+      Logger.error("Unable to load Broker Config file", e);
       System.exit(1);
     }
 

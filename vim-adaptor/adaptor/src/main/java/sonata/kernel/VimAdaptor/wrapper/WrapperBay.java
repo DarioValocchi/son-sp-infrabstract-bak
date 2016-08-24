@@ -129,11 +129,11 @@ public class WrapperBay {
     return (ComputeWrapper) this.repository.readVimEntry(vimUuid).getVimWrapper();
   }
 
-  
-  
+
+
   /**
    * @param config
-   * @param computeVimRef 
+   * @param computeVimRef
    * @return
    */
   public String registerNetworkingWrapper(WrapperConfiguration config, String computeVimRef) {
@@ -146,11 +146,11 @@ public class WrapperBay {
       this.repository.writeVimEntry(config.getUuid(), record);
       this.repository.writeNetworkVimLink(computeVimRef, config.getUuid());
       output = "{\"status\":\"COMPLETED\",\"uuid\":\"" + config.getUuid() + "\"}";
-    } 
+    }
     return output;
   }
-  
-  
+
+
   /**
    * Return the VimRepo
    * 

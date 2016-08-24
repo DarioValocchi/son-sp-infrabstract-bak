@@ -28,20 +28,12 @@ package sonata.kernel.WimAdaptor.vtn;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.sun.source.tree.AssertTree;
-
-import sonata.kernel.WimAdaptor.wrapper.WimRepo;
-import sonata.kernel.WimAdaptor.wrapper.WrapperConfiguration;
-import sonata.kernel.WimAdaptor.wrapper.WrapperRecord;
 import sonata.kernel.WimAdaptor.wrapper.vtn.VtnClient;
-import sonata.kernel.WimAdaptor.wrapper.vtn.VtnWrapper;
 
 
 /**
@@ -69,24 +61,24 @@ public class VtnClientTest {
     boolean delete = client.deleteVtn("TestVtn01");
     Assert.assertTrue("Cannot create the test VTN", create);
     Assert.assertTrue("Cannot delete the test VTN", delete);
-    System.out.println("DONE");    
+    System.out.println("DONE");
   }
 
   @Test
   public void testDeleteNonEsistingVtn() {
     System.out.println("Deleting a non existing VTN");
     boolean delete = client.deleteVtn("TestVtn01");
-    Assert.assertFalse("Cannot delete the test VTN", delete );
+    Assert.assertFalse("Cannot delete the test VTN", delete);
   }
 
   @Test
-  public void testAddDeleteFlowRule(){
-    System.out.println("Adding a flow rule");    
+  public void testAddDeleteFlowRule() {
+    System.out.println("Adding a flow rule");
     boolean create = client.setupVtn("TestVtn01");
     boolean setup = client.setupFlow("TestVtn01", "Instance0000");
     boolean delete = client.deleteVtn("TestVtn01");
     Assert.assertTrue("Cannot create the test VTN to setup the flow", create);
-    Assert.assertTrue("Cannot setup the Flow Rule",setup);
+    Assert.assertTrue("Cannot setup the Flow Rule", setup);
     Assert.assertTrue("Cannot delete the test VTN after the flow setup", delete);
   }
 }

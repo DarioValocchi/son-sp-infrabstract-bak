@@ -41,7 +41,8 @@ public class AdaptorDefaultConsumer extends DefaultConsumer {
 
   private RabbitMqConsumer msgBusConsumer;
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(AdaptorDefaultConsumer.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(AdaptorDefaultConsumer.class);
 
   /**
    * Create a RabbitMq consumer for the MsgBus plug-in.
@@ -58,7 +59,7 @@ public class AdaptorDefaultConsumer extends DefaultConsumer {
   public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
       byte[] body) throws IOException {
     String message = new String(body, "UTF-8");
-    //Logger.info("Received message:" + message + " on " + envelope.getRoutingKey());
+    // Logger.info("Received message:" + message + " on " + envelope.getRoutingKey());
     Logger.info("Received message on " + envelope.getRoutingKey());
     if (properties != null && properties.getAppId() != null
         && !properties.getAppId().equals(AdaptorCore.APP_ID)) {

@@ -56,7 +56,8 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
   private WrapperConfiguration config;
   private IpNetPool myPool;
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(OpenStackHeatWrapper.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(OpenStackHeatWrapper.class);
 
   /**
    * Standard constructor for an Compute Wrapper of an OpenStack VIM using Heat.
@@ -185,7 +186,7 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
     cidr = null;
     // One virtual router for NSD virtual links connecting VNFS (no router for external virtual
     // links and management links)
-    
+
     ArrayList<VnfDescriptor> vnfs = data.getVnfdList();
     for (VirtualLink link : nsd.getVirtualLinks()) {
       ArrayList<String> connectionPointReference = link.getConnectionPointsReference();
@@ -227,7 +228,7 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
               vnfd.getName() + ":" + link.getId() + ":subnet:" + nsd.getInstanceUuid());
           cidr = subnets.get(subnetIndex);
           subnet.putProperty("cidr", cidr);
-          //subnet.putProperty("gateway_ip", myPool.getGateway(cidr));
+          // subnet.putProperty("gateway_ip", myPool.getGateway(cidr));
           // subnet.putProperty("cidr", "192.168." + subnetIndex + ".0/24");
           // subnet.putProperty("gateway_ip", "192.168." + subnetIndex + ".1");
           subnetIndex++;
@@ -320,11 +321,11 @@ public class OpenStackHeatWrapper extends ComputeWrapper {
         if (!isMgmtPort) {
           // Resolve vnf_id from vnf_name
           String vnfId = null;
-          //Logger.info("[TRANSLATION] VNFD.name: " + vnfd.getName());
-         
+          // Logger.info("[TRANSLATION] VNFD.name: " + vnfd.getName());
+
           for (NetworkFunction vnf : nsd.getNetworkFunctions()) {
-            //Logger.info("[TRANSLATION] NSD.network_functions.vnf_name: " + vnf.getVnfName());
-            //Logger.info("[TRANSLATION] NSD.network_functions.vnf_id: " + vnf.getVnfId());
+            // Logger.info("[TRANSLATION] NSD.network_functions.vnf_name: " + vnf.getVnfName());
+            // Logger.info("[TRANSLATION] NSD.network_functions.vnf_id: " + vnf.getVnfId());
 
             if (vnf.getVnfName().equals(vnfd.getName())) {
               vnfId = vnf.getVnfId();

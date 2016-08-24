@@ -75,9 +75,9 @@ public class AddVimCallProcessor extends AbstractCallProcessor {
     if (wrapperType.equals("compute")) {
       tenantExtNet = jsonObject.getString("tenant_ext_net");
       tenantExtRouter = jsonObject.getString("tenant_ext_router");
-    } else if (wrapperType.equals("networking")){
+    } else if (wrapperType.equals("networking")) {
       computeVimRef = jsonObject.getString("compute_uuid");
-    } 
+    }
     config.setUuid(UUID.randomUUID().toString());
     config.setWrapperType(wrapperType);
     config.setVimVendor(vimVendor);

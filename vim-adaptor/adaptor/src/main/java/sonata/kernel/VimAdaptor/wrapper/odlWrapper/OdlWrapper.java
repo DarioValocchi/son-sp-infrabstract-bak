@@ -115,7 +115,7 @@ public class OdlWrapper extends NetworkingWrapper {
 
         VnfVirtualLink inputLink = null;
         for (VnfVirtualLink link : vnfd.getVirtualLinks()) {
-          if (link.getConnectionPointsReference().contains("vnf:"+cpRef)) {
+          if (link.getConnectionPointsReference().contains("vnf:" + cpRef)) {
             inputLink = link;
             break;
           }
@@ -154,7 +154,8 @@ public class OdlWrapper extends NetworkingWrapper {
         }
 
         if (connectedPort == null) {
-          throw new Exception("Illegal Format: cannot find the Heat port with name: "+qualifiedName);
+          throw new Exception(
+              "Illegal Format: cannot find the Heat port with name: " + qualifiedName);
         } else {
           // Eureka!
           OrderedMacAddress mac = new OrderedMacAddress();
@@ -166,13 +167,13 @@ public class OdlWrapper extends NetworkingWrapper {
         }
       }
     }
-    
+
     Collections.sort(odlList);
-    
+
     ObjectMapper mapper = new ObjectMapper(new JsonFactory());
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
     // Logger.info(compositionString);
-    String payload= mapper.writeValueAsString(odlList);
+    String payload = mapper.writeValueAsString(odlList);
     Logger.info(payload);
   }
 

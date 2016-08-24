@@ -133,7 +133,8 @@ public class VimRepoTest {
 
     repoInstance = new VimRepo();
 
-    boolean out = repoInstance.writeInstanceEntry("1", "1-1", "stack1-1","xxxx-xxxxxxxx-xxxxxxxx-xxxx");
+    boolean out =
+        repoInstance.writeInstanceEntry("1", "1-1", "stack1-1", "xxxx-xxxxxxxx-xxxxxxxx-xxxx");
 
     Assert.assertTrue("Errors while writing the instance", out);
 
@@ -148,7 +149,8 @@ public class VimRepoTest {
 
     repoInstance = new VimRepo();
 
-    boolean out = repoInstance.writeInstanceEntry("1", "1-1", "stack1-1","xxxx-xxxxxxxx-xxxxxxxx-xxxx");
+    boolean out =
+        repoInstance.writeInstanceEntry("1", "1-1", "stack1-1", "xxxx-xxxxxxxx-xxxxxxxx-xxxx");
 
     Assert.assertTrue("Errors while writing the instance", out);
 
@@ -166,7 +168,8 @@ public class VimRepoTest {
 
     repoInstance = new VimRepo();
 
-    boolean out = repoInstance.writeInstanceEntry("1", "1-1", "stack1-1", "xxxx-xxxxxxxx-xxxxxxxx-xxxx");
+    boolean out =
+        repoInstance.writeInstanceEntry("1", "1-1", "stack1-1", "xxxx-xxxxxxxx-xxxxxxxx-xxxx");
 
     Assert.assertTrue("Errors while writing the instance", out);
 
@@ -182,12 +185,12 @@ public class VimRepoTest {
   }
 
   @Test
-  public void testNetworkingVim(){
-    
+  public void testNetworkingVim() {
+
     repoInstance = new VimRepo();
     String computeUuid = "12345777";
     String networkingUuid = "abcde";
-    
+
     WrapperConfiguration config = new WrapperConfiguration();
     config.setVimEndpoint("x.x.x.x");
     config.setVimVendor("mock");
@@ -219,11 +222,13 @@ public class VimRepoTest {
     out = repoInstance.writeNetworkVimLink(computeUuid, networkingUuid);
     Assert.assertTrue("Unable to write compute/networking association", out);
 
-    WrapperRecord netRecord= repoInstance.getNetworkVim(computeUuid);
-    
-    Assert.assertTrue("The retrieved vim is not a networking vim", netRecord.getConfig().getWrapperType().equals("networking"));
-    Assert.assertTrue("Unexpected networking vim uuid",netRecord.getConfig().getUuid().equals(networkingUuid));
-    
+    WrapperRecord netRecord = repoInstance.getNetworkVim(computeUuid);
+
+    Assert.assertTrue("The retrieved vim is not a networking vim",
+        netRecord.getConfig().getWrapperType().equals("networking"));
+    Assert.assertTrue("Unexpected networking vim uuid",
+        netRecord.getConfig().getUuid().equals(networkingUuid));
+
     out = repoInstance.removeVimEntry(config.getUuid());
     Assert.assertTrue("unable to remove vim", out);
   }

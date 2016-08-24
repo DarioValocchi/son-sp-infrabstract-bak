@@ -39,7 +39,8 @@ import java.util.Observable;
 
 public class RemoveServiceCallProcessor extends AbstractCallProcessor {
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(RemoveServiceCallProcessor.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(RemoveServiceCallProcessor.class);
 
   /**
    * Generate a CallProcessor to process an API call to create a new VIM wrapper
@@ -60,7 +61,8 @@ public class RemoveServiceCallProcessor extends AbstractCallProcessor {
     JSONTokener tokener = new JSONTokener(message.getBody());
     JSONObject jsonObject = (JSONObject) tokener.nextValue();
     String instanceUuid = jsonObject.getString("instance_uuid");
-    String vimUuid = WrapperBay.getInstance().getVimRepo().getComputeVimUuidFromInstance(instanceUuid);
+    String vimUuid =
+        WrapperBay.getInstance().getVimRepo().getComputeVimUuidFromInstance(instanceUuid);
     ComputeWrapper wr = WrapperBay.getInstance().getComputeWrapper(vimUuid);
     wr.addObserver(this);
     wr.removeService(instanceUuid, this.getSid());

@@ -90,7 +90,7 @@ public class WimAdaptorTest implements MessageReceiver {
     Assert.assertTrue(core.getState().equals("STOPPED"));
   }
 
-  
+
   /**
    * Create a Mock wrapper
    * 
@@ -164,5 +164,5 @@ public class WimAdaptorTest implements MessageReceiver {
   public void forwardToConsumer(ServicePlatformMessage message) {
     consumer.injectMessage(message);
   }
-  
+
 }

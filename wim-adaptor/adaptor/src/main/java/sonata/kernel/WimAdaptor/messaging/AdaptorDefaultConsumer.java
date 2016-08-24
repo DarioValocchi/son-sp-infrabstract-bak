@@ -41,7 +41,8 @@ import org.slf4j.LoggerFactory;
 
 public class AdaptorDefaultConsumer extends DefaultConsumer {
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(AdaptorDefaultConsumer.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(AdaptorDefaultConsumer.class);
 
   private RabbitMqConsumer msgBusConsumer;
 

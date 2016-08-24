@@ -57,7 +57,7 @@ public class WrapperFactory {
       Logger.info("Wrapper created.");
     } else {
       Logger.info("Unable to create wrapper.");
-      
+
     }
     return output;
   }

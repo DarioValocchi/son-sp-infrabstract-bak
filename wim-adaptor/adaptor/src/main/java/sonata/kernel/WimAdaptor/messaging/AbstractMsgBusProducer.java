@@ -32,9 +32,10 @@ import org.slf4j.LoggerFactory;
 
 
 public abstract class AbstractMsgBusProducer implements MsgBusProducer, Runnable {
-  
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(AbstractMsgBusProducer.class);
-  
+
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(AbstractMsgBusProducer.class);
+
   private BlockingQueue<ServicePlatformMessage> muxQueue;
   private boolean stop = false;
 
@@ -59,7 +60,7 @@ public abstract class AbstractMsgBusProducer implements MsgBusProducer, Runnable
     try {
       thread.start();
     } catch (Exception e) {
-      Logger.error(e.getMessage(),e);
+      Logger.error(e.getMessage(), e);
       out = false;
     }
     return out;
@@ -74,7 +75,7 @@ public abstract class AbstractMsgBusProducer implements MsgBusProducer, Runnable
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
-        Logger.error(e.getMessage(),e);
+        Logger.error(e.getMessage(), e);
       }
     }
     this.stop = true;
@@ -87,7 +88,7 @@ public abstract class AbstractMsgBusProducer implements MsgBusProducer, Runnable
       try {
         this.sendMessage(muxQueue.take());
       } catch (InterruptedException e) {
-        Logger.error(e.getMessage(),e);
+        Logger.error(e.getMessage(), e);
       }
     } while (!stop);
   }

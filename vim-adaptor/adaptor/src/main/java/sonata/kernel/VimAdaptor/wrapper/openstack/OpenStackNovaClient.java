@@ -116,7 +116,8 @@ public class OpenStackNovaClient {
 
 
     } catch (Exception e) {
-      Logger.error("Runtime error getting openstack limits" + " error message: " + e.getMessage(), e);
+      Logger.error("Runtime error getting openstack limits" + " error message: " + e.getMessage(),
+          e);
     }
 
     return resources;

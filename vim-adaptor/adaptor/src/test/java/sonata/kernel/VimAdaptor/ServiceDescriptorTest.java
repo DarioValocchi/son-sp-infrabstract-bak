@@ -152,19 +152,19 @@ public class ServiceDescriptorTest {
     Assert.assertTrue(sd.getConnectionPoints().size() > 0);
     Assert.assertTrue(sd.getVirtualLinks().size() > 0);
     Assert.assertTrue(sd.getForwardingGraphs().size() > 0);
-    
+
     sd = null;
     bodyBuilder = new StringBuilder();
     in = new BufferedReader(new InputStreamReader(
         new FileInputStream(new File("./YAML/sonata-demo1.yml")), Charset.forName("UTF-8")));
-    line=null;
+    line = null;
     while ((line = in.readLine()) != null)
       bodyBuilder.append(line + "\n\r");
     in.close();
     mapper = new ObjectMapper(new YAMLFactory());
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
     sd = mapper.readValue(bodyBuilder.toString(), ServiceDescriptor.class);
-    
+
     Assert.assertNotNull(sd.getDescriptorVersion());
     Assert.assertNotNull(sd.getVendor());
     Assert.assertNotNull(sd.getName());
@@ -175,11 +175,12 @@ public class ServiceDescriptorTest {
     Assert.assertTrue(sd.getConnectionPoints().size() > 0);
     Assert.assertTrue(sd.getVirtualLinks().size() > 0);
     Assert.assertTrue(sd.getForwardingGraphs().size() > 0);
-    
+
   }
 
   /**
-   * Test the firewall example VNF Descriptor parsing it from file and doing some basic check on the parsed data.
+   * Test the firewall example VNF Descriptor parsing it from file and doing some basic check on the
+   * parsed data.
    * 
    * @throws IOException
    */
@@ -209,9 +210,10 @@ public class ServiceDescriptorTest {
     Assert.assertTrue(vd.getConnectionPoints().size() > 0);
 
   }
-  
+
   /**
-   * Test the vTC example VNF Descriptor parsing it from file and doing some basic check on the parsed data.
+   * Test the vTC example VNF Descriptor parsing it from file and doing some basic check on the
+   * parsed data.
    * 
    * @throws IOException
    */

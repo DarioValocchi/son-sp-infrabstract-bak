@@ -43,7 +43,8 @@ import java.util.Observable;
 
 public class ResourceAvailabilityCallProcessor extends AbstractCallProcessor {
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(ResourceAvailabilityCallProcessor.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(ResourceAvailabilityCallProcessor.class);
 
   /**
    * Generate a CallProcessor to process an API call to create a new VIM wrapper
@@ -72,7 +73,8 @@ public class ResourceAvailabilityCallProcessor extends AbstractCallProcessor {
       ResourceAvailabilityData data = null;
       data = mapper.readValue(message.getBody(), ResourceAvailabilityData.class);
 
-      Logger.info("Checking availability of resource. Minimum:\n" + mapper.writeValueAsString(data));
+      Logger
+          .info("Checking availability of resource. Minimum:\n" + mapper.writeValueAsString(data));
       // TODO get resource availability
 
       // By now we just answer OK, for resource available.

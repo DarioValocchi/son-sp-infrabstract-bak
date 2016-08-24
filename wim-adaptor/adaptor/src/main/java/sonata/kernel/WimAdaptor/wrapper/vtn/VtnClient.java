@@ -80,13 +80,14 @@ public class VtnClient {
     String out = null;
     String string = null;
 
-    Logger.info("Creating Flow Rule: " + condName + " for vtn: "+vtnName);
-    
+    Logger.info("Creating Flow Rule: " + condName + " for vtn: " + vtnName);
+
     try {
 
       // Call the python client for creating the stack
-      ProcessBuilder processBuilder = new ProcessBuilder(PYTHON2_7, ADAPTOR_HEAT_API_PY,
-          "--configuration", url, userName, password,"-sf", condName, "254.0.0.1/32","254.0.0.2/32",vtnName);
+      ProcessBuilder processBuilder =
+          new ProcessBuilder(PYTHON2_7, ADAPTOR_HEAT_API_PY, "--configuration", url, userName,
+              password, "-sf", condName, "254.0.0.1/32", "254.0.0.2/32", vtnName);
       Process process = processBuilder.start();
 
       // Read the errors of creating the stack
@@ -111,12 +112,13 @@ public class VtnClient {
       process.destroy();
 
     } catch (Exception e) {
-      Logger.error("Runtime error creating VTN : " + vtnName+ " error message: " + e.getMessage(),e);
+      Logger.error("Runtime error creating VTN : " + vtnName + " error message: " + e.getMessage(),
+          e);
       return false;
     }
     if (!out.equals("SUCCESS")) {
-      Logger.error("unexpected response: "+ out);
-      return false;            
+      Logger.error("unexpected response: " + out);
+      return false;
     }
     return true;
   }
@@ -132,12 +134,12 @@ public class VtnClient {
     String string = null;
     String out = null;
     Logger.info("Creating VTN: " + vtnName);
-    
+
     try {
 
       // Call the python client for creating the stack
       ProcessBuilder processBuilder = new ProcessBuilder(PYTHON2_7, ADAPTOR_HEAT_API_PY,
-          "--configuration", url, userName, password,"-i", vtnName);
+          "--configuration", url, userName, password, "-i", vtnName);
       Process process = processBuilder.start();
 
       // Read the errors of creating the stack
@@ -162,24 +164,25 @@ public class VtnClient {
       process.destroy();
 
       if (!out.equals("SUCCESS")) {
-        Logger.error("unexpected response: "+ out);
+        Logger.error("unexpected response: " + out);
         return false;
       }
 
     } catch (Exception e) {
-      Logger.error("Runtime error creating VTN : " + vtnName + " error message: " + e.getMessage(),e);
-      Logger.error("unexpected response: "+ out);
+      Logger.error("Runtime error creating VTN : " + vtnName + " error message: " + e.getMessage(),
+          e);
+      Logger.error("unexpected response: " + out);
       return false;
     }
 
     return true;
   }
-  
+
   /**
    * Delete VTN.
    * 
    * @param vtnName - used for logging, usually service tenant
-   * @return - true if the operation was completed successfully 
+   * @return - true if the operation was completed successfully
    */
   public boolean deleteVtn(String vtnName) {
 
@@ -204,9 +207,11 @@ public class VtnClient {
       stdInput.close();
       process.destroy();
 
-      Logger.info("Request was sent for VTN: " + vtnName+" : " + isDeleted);
+      Logger.info("Request was sent for VTN: " + vtnName + " : " + isDeleted);
     } catch (Exception e) {
-      Logger.error("Runtime error when deleting stack : " + vtnName + " error message: " + e.getMessage(),e);
+      Logger.error(
+          "Runtime error when deleting stack : " + vtnName + " error message: " + e.getMessage(),
+          e);
       return false;
     }
 
@@ -216,8 +221,8 @@ public class VtnClient {
 
   @Override
   public String toString() {
-    return "VtnClient{" + "url='" + url + '\'' + ", userName='" + userName + '\''
-        + ", password='" + password + '\'' + '}';
+    return "VtnClient{" + "url='" + url + '\'' + ", userName='" + userName + '\'' + ", password='"
+        + password + '\'' + '}';
   }
 
 }

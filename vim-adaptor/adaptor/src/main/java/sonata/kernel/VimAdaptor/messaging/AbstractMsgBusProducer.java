@@ -36,7 +36,8 @@ public abstract class AbstractMsgBusProducer implements MsgBusProducer, Runnable
   private BlockingQueue<ServicePlatformMessage> muxQueue;
   private boolean stop = false;
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(AbstractMsgBusProducer.class);
+  private static final org.slf4j.Logger Logger =
+      LoggerFactory.getLogger(AbstractMsgBusProducer.class);
 
   public AbstractMsgBusProducer(BlockingQueue<ServicePlatformMessage> muxQueue) {
     this.muxQueue = muxQueue;

@@ -40,12 +40,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.internal.matchers.*;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -55,7 +49,6 @@ import sonata.kernel.VimAdaptor.commons.DeployServiceResponse;
 import sonata.kernel.VimAdaptor.commons.ResourceAvailabilityData;
 import sonata.kernel.VimAdaptor.commons.Status;
 import sonata.kernel.VimAdaptor.commons.VnfRecord;
-import sonata.kernel.VimAdaptor.commons.heat.StackComposition;
 import sonata.kernel.VimAdaptor.commons.nsd.ServiceDescriptor;
 import sonata.kernel.VimAdaptor.commons.vnfd.Unit;
 import sonata.kernel.VimAdaptor.commons.vnfd.UnitDeserializer;
@@ -152,19 +145,19 @@ public class DeployServiceTest implements MessageReceiver {
     data.addVnfDescriptor(vnfd1);
     data.addVnfDescriptor(vnfd2);
     data.addVnfDescriptor(vnfd3);
-    
-    //Set a second data for the demo payload
-    
-    sd=null;
+
+    // Set a second data for the demo payload
+
+    sd = null;
     bodyBuilder = new StringBuilder();
     in = new BufferedReader(new InputStreamReader(
         new FileInputStream(new File("./YAML/sonata-demo1.yml")), Charset.forName("UTF-8")));
-    line=null;
+    line = null;
     while ((line = in.readLine()) != null)
       bodyBuilder.append(line + "\n\r");
     sd = mapper.readValue(bodyBuilder.toString(), ServiceDescriptor.class);
-    
-    vnfd1=null;
+
+    vnfd1 = null;
     bodyBuilder = new StringBuilder();
     in = new BufferedReader(new InputStreamReader(
         new FileInputStream(new File("./YAML/vTC-vnfd.yml")), Charset.forName("UTF-8")));
@@ -172,12 +165,12 @@ public class DeployServiceTest implements MessageReceiver {
     while ((line = in.readLine()) != null)
       bodyBuilder.append(line + "\n\r");
     vnfd1 = mapper.readValue(bodyBuilder.toString(), VnfDescriptor.class);
-    
+
     this.data1 = new DeployServiceData();
 
     data1.setServiceDescriptor(sd);
     data1.addVnfDescriptor(vnfd1);
-    
+
   }
 
   /**
@@ -390,7 +383,7 @@ public class DeployServiceTest implements MessageReceiver {
    * 
    * @throws IOException
    */
-  @Test
+  @Ignore
   public void testDeployServiceOpenStack() throws IOException, InterruptedException {
 
     BlockingQueue<ServicePlatformMessage> muxQueue =
@@ -506,7 +499,7 @@ public class DeployServiceTest implements MessageReceiver {
     // Service removal
     output = null;
     String instanceUuid = baseInstanceUuid + "-01";
-    String message = "{\"instance_uuid\":\"" + instanceUuid+"\"}";
+    String message = "{\"instance_uuid\":\"" + instanceUuid + "\"}";
     topic = "infrastructure.service.remove";
     ServicePlatformMessage removeInstanceMessage = new ServicePlatformMessage(message,
         "application/json", topic, UUID.randomUUID().toString(), topic);

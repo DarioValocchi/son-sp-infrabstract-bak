@@ -71,11 +71,13 @@ public class ConfigureWimCallProcessor extends AbstractCallProcessor {
         this.sendToMux(responseMessage);
       } catch (JsonProcessingException e) {
         Logger.error("Unable to serialize YAML response", e);
-        sendResponse("{\"status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\""+e.getMessage()+"\"}");
+        sendResponse("{\"status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\""
+            + e.getMessage() + "\"}");
       }
 
     } else {
-      sendResponse("{\"status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\"Unable to configure WAN\"}");
+      sendResponse(
+          "{\"status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\"Unable to configure WAN\"}");
     }
 
     return true;
