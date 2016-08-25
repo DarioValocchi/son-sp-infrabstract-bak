@@ -35,6 +35,14 @@ import sonata.kernel.VimAdaptor.commons.vnfd.VnfVirtualLink;
 import sonata.kernel.VimAdaptor.wrapper.NetworkingWrapper;
 import sonata.kernel.VimAdaptor.wrapper.WrapperConfiguration;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +52,7 @@ public class OdlWrapper extends NetworkingWrapper {
 
   private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(OdlWrapper.class);
 
+  private WrapperConfiguration config;
 
   /**
    * Basic constructor.
@@ -52,6 +61,7 @@ public class OdlWrapper extends NetworkingWrapper {
    */
   public OdlWrapper(WrapperConfiguration config) {
     super();
+    this.config = config;
   }
 
   @Override
@@ -175,6 +185,20 @@ public class OdlWrapper extends NetworkingWrapper {
     // Logger.info(compositionString);
     String payload = mapper.writeValueAsString(odlPayload);
     Logger.info(payload);
+    
+    DatagramSocket clientSocket = new DatagramSocket();
+    InetAddress IPAddress = InetAddress.getByName(config.getVimEndpoint());
+    byte[] sendData = new byte[1024];
+    byte[] receiveData = new byte[1024];
+    sendData = payload.getBytes(Charset.forName("UTF-8"));
+    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 55555);
+    clientSocket.send(sendPacket);
+    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+    clientSocket.receive(receivePacket);
+    String response = new String(receivePacket.getData());
+    Logger.info("SFC Agent response:\n" + response);
+    clientSocket.close();
+    
   }
 
 }

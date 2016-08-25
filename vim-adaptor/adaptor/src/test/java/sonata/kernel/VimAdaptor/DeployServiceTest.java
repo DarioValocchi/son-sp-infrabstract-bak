@@ -383,7 +383,7 @@ public class DeployServiceTest implements MessageReceiver {
    * 
    * @throws IOException
    */
-  @Ignore
+  @Test
   public void testDeployServiceOpenStack() throws IOException, InterruptedException {
 
     BlockingQueue<ServicePlatformMessage> muxQueue =
@@ -460,11 +460,11 @@ public class DeployServiceTest implements MessageReceiver {
 
 
     output = null;
-    String baseInstanceUuid = data1.getNsd().getInstanceUuid();
-    data1.setVimUuid(wrUuid);
-    data1.getNsd().setInstanceUuid(baseInstanceUuid + "-01");
+    String baseInstanceUuid = data.getNsd().getInstanceUuid();
+    data.setVimUuid(wrUuid);
+    data.getNsd().setInstanceUuid(baseInstanceUuid + "-01");
 
-    String body = mapper.writeValueAsString(data1);
+    String body = mapper.writeValueAsString(data);
 
     topic = "infrastructure.service.deploy";
     ServicePlatformMessage deployServiceMessage = new ServicePlatformMessage(body,
