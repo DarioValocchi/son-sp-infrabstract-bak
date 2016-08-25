@@ -28,19 +28,28 @@ public class OdlPayload {
    * @param string2
    * @param odlList2
    */
-  public OdlPayload(String inSeg, String outSeg, ArrayList<OrderedMacAddress> odlList2) {
-    this.inputSegment=inSeg;
-    this.outputSegment=outSeg;
-    @SuppressWarnings("unchecked")
-    ArrayList<OrderedMacAddress> clone = (ArrayList<OrderedMacAddress>)odlList2.clone();
-    this.odlList=clone;
+  public OdlPayload(String action, String instanceId, String inSeg, String outSeg,
+      ArrayList<OrderedMacAddress> odlList2) {
+    this.inputSegment = inSeg;
+    this.outputSegment = outSeg;
+    if (odlList2 != null) {
+      @SuppressWarnings("unchecked")
+      ArrayList<OrderedMacAddress> clone = (ArrayList<OrderedMacAddress>) odlList2.clone();
+      this.odlList = clone;
+    }
+    this.instanceId = instanceId;
+    this.action = action;
   }
+
+  @JsonProperty("action")
+  String action;
   @JsonProperty("port_list")
   ArrayList<OrderedMacAddress> odlList;
   @JsonProperty("in_segment")
   String inputSegment;
-  @JsonProperty("out_segment")  
+  @JsonProperty("out_segment")
   String outputSegment;
-  
-  
+  @JsonProperty("instance_id")
+  String instanceId;
+
 }

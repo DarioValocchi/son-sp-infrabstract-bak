@@ -17,9 +17,12 @@
  */
 package sonata.kernel.VimAdaptor.wrapper.odlWrapper;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.slf4j.LoggerFactory;
 import sonata.kernel.VimAdaptor.commons.DeployServiceData;
@@ -179,26 +182,64 @@ public class OdlWrapper extends NetworkingWrapper {
     }
 
     Collections.sort(odlList);
-    OdlPayload odlPayload = new OdlPayload("254.0.0.1/32","254.0.0.2/32",odlList);
+    OdlPayload odlPayload = new OdlPayload("add", data.getNsd().getInstanceUuid(), "254.0.0.1/32",
+        "254.0.0.2/32", odlList);
     ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-    mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+    mapper.setSerializationInclusion(Include.NON_NULL);
     // Logger.info(compositionString);
     String payload = mapper.writeValueAsString(odlPayload);
     Logger.info(payload);
-    
-    DatagramSocket clientSocket = new DatagramSocket();
+
+    int sfcAgentPort = 55555;
+    DatagramSocket clientSocket = new DatagramSocket(sfcAgentPort);
     InetAddress IPAddress = InetAddress.getByName(config.getVimEndpoint());
     byte[] sendData = new byte[1024];
     byte[] receiveData = new byte[1024];
     sendData = payload.getBytes(Charset.forName("UTF-8"));
-    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 55555);
+    DatagramPacket sendPacket =
+        new DatagramPacket(sendData, sendData.length, IPAddress, sfcAgentPort);
     clientSocket.send(sendPacket);
     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
     clientSocket.receive(receivePacket);
-    String response = new String(receivePacket.getData());
+    String response = new String(receivePacket.getData(), 0, receivePacket.getLength(),Charset.forName("UTF-8"));
+    Logger.info("SFC Agent response:\n" + response);
+    clientSocket.close();
+    if (!response.equals("SUCCESS")) {
+      Logger.error("received string length: "+response.length());  
+      Logger.error("received string: "+response+" not equal SUCCESS");
+    }
+    return;
+  }
+
+  public void deconfigureNetworking(String instanceId) throws Exception {
+
+    OdlPayload odlPayload = new OdlPayload("delete", instanceId,null,null,null);
+    ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+    mapper.setSerializationInclusion(Include.NON_NULL);
+    // Logger.info(compositionString);
+    String payload = mapper.writeValueAsString(odlPayload);
+    Logger.info(payload);
+
+    int sfcAgentPort = 55555;
+    DatagramSocket clientSocket = new DatagramSocket(sfcAgentPort);
+    InetAddress IPAddress = InetAddress.getByName(config.getVimEndpoint());
+    byte[] sendData = new byte[1024];
+    byte[] receiveData = new byte[1024];
+    sendData = payload.getBytes(Charset.forName("UTF-8"));
+    DatagramPacket sendPacket =
+        new DatagramPacket(sendData, sendData.length, IPAddress, sfcAgentPort);
+    clientSocket.send(sendPacket);
+    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+    clientSocket.receive(receivePacket);
+    String response = new String(receivePacket.getData(), 0, receivePacket.getLength(),Charset.forName("UTF-8"));
     Logger.info("SFC Agent response:\n" + response);
     clientSocket.close();
     
+    
+    if (!response.equals("SUCCESS")) {
+      Logger.error("received string length: "+response.length());  
+      Logger.error("received string: "+response+" not equal SUCCESS");
+    }
+    return;
   }
-
 }
