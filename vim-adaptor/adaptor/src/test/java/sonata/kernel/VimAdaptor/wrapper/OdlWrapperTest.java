@@ -123,7 +123,7 @@ public class OdlWrapperTest {
   }
 
   @Test
-  public void testOdlWrapper() {
+  public void testOdlWrapper() throws Exception {
     WrapperConfiguration config = new WrapperConfiguration();
 
     config.setVimEndpoint("10.100.32.10");
@@ -132,18 +132,16 @@ public class OdlWrapperTest {
     try {
       wrapper.configureNetworking(data, composition);
     } catch (Exception e) {
-      System.out.println("Error in the net config");
+      System.out.println("Expected exception thrown when setting SFC for non existing service");
     }
     try {
       Thread.sleep(10000);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    try {
-      wrapper.deconfigureNetworking(data.getNsd().getInstanceUuid());
-    } catch (Exception e) {
-      System.out.println("Error in the net de-config");
-    }
+
+    wrapper.deconfigureNetworking(data.getNsd().getInstanceUuid());
+
   }
 
 }

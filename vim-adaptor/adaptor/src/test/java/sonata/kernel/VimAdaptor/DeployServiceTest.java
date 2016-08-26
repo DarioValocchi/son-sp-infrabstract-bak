@@ -116,7 +116,7 @@ public class DeployServiceTest implements MessageReceiver {
     VnfDescriptor vnfd1;
     bodyBuilder = new StringBuilder();
     in = new BufferedReader(new InputStreamReader(
-        new FileInputStream(new File("./YAML/iperf-vnfd.yml")), Charset.forName("UTF-8")));
+        new FileInputStream(new File("./YAML/vtc-vnf-vnfd.yml")), Charset.forName("UTF-8")));
     line = null;
     while ((line = in.readLine()) != null)
       bodyBuilder.append(line + "\n\r");
@@ -125,28 +125,18 @@ public class DeployServiceTest implements MessageReceiver {
     VnfDescriptor vnfd2;
     bodyBuilder = new StringBuilder();
     in = new BufferedReader(new InputStreamReader(
-        new FileInputStream(new File("./YAML/firewall-vnfd.yml")), Charset.forName("UTF-8")));
+        new FileInputStream(new File("./YAML/fw-vnf-vnfd.yml")), Charset.forName("UTF-8")));
     line = null;
     while ((line = in.readLine()) != null)
       bodyBuilder.append(line + "\n\r");
     vnfd2 = mapper.readValue(bodyBuilder.toString(), VnfDescriptor.class);
 
 
-    VnfDescriptor vnfd3;
-    bodyBuilder = new StringBuilder();
-    in = new BufferedReader(new InputStreamReader(
-        new FileInputStream(new File("./YAML/tcpdump-vnfd.yml")), Charset.forName("UTF-8")));
-    line = null;
-    while ((line = in.readLine()) != null)
-      bodyBuilder.append(line + "\n\r");
-    vnfd3 = mapper.readValue(bodyBuilder.toString(), VnfDescriptor.class);
-
     this.data = new DeployServiceData();
 
     data.setServiceDescriptor(sd);
     data.addVnfDescriptor(vnfd1);
     data.addVnfDescriptor(vnfd2);
-    data.addVnfDescriptor(vnfd3);
 
     // Set a second data for the demo payload
 
@@ -172,7 +162,7 @@ public class DeployServiceTest implements MessageReceiver {
 
     data1.setServiceDescriptor(sd);
     data1.addVnfDescriptor(vnfd1);
-
+    
   }
 
   /**
@@ -384,7 +374,7 @@ public class DeployServiceTest implements MessageReceiver {
    * the @Ignore annotation with the @Test annotation
    * @throws Exception 
    */
-  @Ignore
+  @Test
   public void testDeployServiceOpenStack() throws Exception {
 
     BlockingQueue<ServicePlatformMessage> muxQueue =
@@ -412,10 +402,10 @@ public class DeployServiceTest implements MessageReceiver {
 
 
     String addVimBody = "{\"wr_type\":\"compute\",\"vim_type\":\"Heat\", "
-        + "\"tenant_ext_router\":\"20790da5-2dc1-4c7e-b9c3-a8d590517563\", "
-        + "\"tenant_ext_net\":\"decd89e2-1681-427e-ac24-6e9f1abb1715\","
-        + "\"vim_address\":\"openstack.sonata-nfv.eu\",\"username\":\"op_sonata\","
-        + "\"pass\":\"op_s0n@t@\",\"tenant\":\"op_sonata\"}";
+        + "\"tenant_ext_router\":\"4ac2b52e-8f6b-4af3-ad28-38ede9d71c83\", "
+        + "\"tenant_ext_net\":\"cbc5a4fa-59ed-4ec1-ad2d-adb270e21693\","
+        + "\"vim_address\":\"10.100.32.200\",\"username\":\"admin\","
+        + "\"pass\":\"ii70mseq\",\"tenant\":\"admin\"}";
     String topic = "infrastructure.management.compute.add";
     ServicePlatformMessage addVimMessage = new ServicePlatformMessage(addVimBody,
         "application/json", topic, UUID.randomUUID().toString(), topic);
@@ -431,15 +421,15 @@ public class DeployServiceTest implements MessageReceiver {
     JSONTokener tokener = new JSONTokener(output);
     JSONObject jsonObject = (JSONObject) tokener.nextValue();
     String status = jsonObject.getString("status");
-    String wrUuid = jsonObject.getString("uuid");
+    String computeWrUuid = jsonObject.getString("uuid");
     Assert.assertTrue(status.equals("COMPLETED"));
-    System.out.println("OpenStack Wrapper added, with uuid: " + wrUuid);
+    System.out.println("OpenStack Wrapper added, with uuid: " + computeWrUuid);
 
 
     output = null;
     String addNetVimBody = "{\"wr_type\":\"networking\",\"vim_type\":\"odl\", "
-        + "\"vim_address\":\"x.x.x.x\",\"username\":\"operator\","
-        + "\"pass\":\"apass\",\"tenant\":\"tenant\",\"compute_uuid\":\"" + wrUuid + "\"}";
+        + "\"vim_address\":\"10.100.32.200\",\"username\":\"operator\","
+        + "\"pass\":\"apass\",\"tenant\":\"tenant\",\"compute_uuid\":\"" + computeWrUuid + "\"}";
     topic = "infrastructure.management.networking.add";
     ServicePlatformMessage addNetVimMessage = new ServicePlatformMessage(addNetVimBody,
         "application/json", topic, UUID.randomUUID().toString(), topic);
@@ -462,7 +452,7 @@ public class DeployServiceTest implements MessageReceiver {
 
     output = null;
     String baseInstanceUuid = data.getNsd().getInstanceUuid();
-    data.setVimUuid(wrUuid);
+    data.setVimUuid(computeWrUuid);
     data.getNsd().setInstanceUuid(baseInstanceUuid + "-01");
 
     String body = mapper.writeValueAsString(data);
@@ -519,7 +509,7 @@ public class DeployServiceTest implements MessageReceiver {
     Assert.assertTrue("Adapter returned an unexpected status: " + status, status.equals("SUCCESS"));
 
     output = null;
-    message = "{\"wr_type\":\"compute\",\"uuid\":\"" + wrUuid + "\"}";
+    message = "{\"wr_type\":\"compute\",\"uuid\":\"" + computeWrUuid + "\"}";
     topic = "infrastructure.management.compute.remove";
     ServicePlatformMessage removeVimMessage = new ServicePlatformMessage(message,
         "application/json", topic, UUID.randomUUID().toString(), topic);
