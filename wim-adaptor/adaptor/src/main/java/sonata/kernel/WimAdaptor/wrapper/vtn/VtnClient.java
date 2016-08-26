@@ -89,7 +89,7 @@ public class VtnClient {
       // Call the python client for creating the stack
       ProcessBuilder processBuilder =
           new ProcessBuilder(PYTHON2_7, ADAPTOR_HEAT_API_PY, "--configuration", url, userName,
-              password, "-sf", condName, "254.0.0.1/32", "254.0.0.2/32", vtnName);
+              password, "-sf", condName, "10.100.16.40/32", "10.100.32.40/32", vtnName);
       Process process = processBuilder.start();
 
       // Read the errors of creating the stack
