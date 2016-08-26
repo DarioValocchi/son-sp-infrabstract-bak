@@ -20,12 +20,61 @@
  * would like to acknowledge the contributions of their colleagues of the SONATA partner consortium
  * (www.sonata-nfv.eu).
  *
- * @author Dario Valocchi (Ph.D.)
+ * @author Dario Valocchi (Ph.D.), UCL
  * 
  */
 
-package sonata.kernel.VimAdaptor.commons;
+package sonata.kernel.WimAdaptor.commons;
 
-public class VimInstanceInfo {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import sonata.kernel.WimAdaptor.commons.nsd.ServiceDescriptor;
+import sonata.kernel.WimAdaptor.commons.vnfd.VnfDescriptor;
+
+import java.util.ArrayList;
+
+public class DeployServiceData {
+
+  @JsonProperty("vim_uuid")
+  private String vimUuid;
+  private ServiceDescriptor nsd;
+  private ArrayList<VnfDescriptor> vnfds;
+
+  public DeployServiceData() {
+    this.vnfds = new ArrayList<VnfDescriptor>();
+  }
+
+  public void setServiceDescriptor(ServiceDescriptor descriptor) {
+    this.nsd = descriptor;
+  }
+
+  public void addVnfDescriptor(VnfDescriptor descriptor) {
+    this.vnfds.add(descriptor);
+  }
+
+  public ServiceDescriptor getNsd() {
+    return nsd;
+  }
+
+  public ArrayList<VnfDescriptor> getVnfdList() {
+    return vnfds;
+  }
+
+  public String getVimUuid() {
+    return vimUuid;
+  }
+
+  public void setVimUuid(String vimUuid) {
+    this.vimUuid = vimUuid;
+  }
+
+  public void setNsd(ServiceDescriptor nsd) {
+    this.nsd = nsd;
+  }
+
+  public void setVnfds(ArrayList<VnfDescriptor> vnfds) {
+    this.vnfds = vnfds;
+  }
+
 
 }

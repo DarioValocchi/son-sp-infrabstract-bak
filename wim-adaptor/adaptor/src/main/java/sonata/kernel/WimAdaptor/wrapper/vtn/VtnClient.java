@@ -79,6 +79,8 @@ public class VtnClient {
   public boolean setupFlow(String vtnName, String condName) {
     String out = null;
     String string = null;
+    vtnName = formatField(vtnName);
+    condName = formatField(condName);
 
     Logger.info("Creating Flow Rule: " + condName + " for vtn: " + vtnName);
 
@@ -123,6 +125,18 @@ public class VtnClient {
     return true;
   }
 
+  private String formatField(String field) {
+
+    String out, temp;
+    temp = field.replace("-", "");
+    if (temp.length() > 31) {
+      out = temp.substring(0, 30);
+    } else {
+      out = temp;
+    }
+    return out;
+  }
+
   /**
    * configure the VTN .
    *
@@ -133,6 +147,7 @@ public class VtnClient {
 
     String string = null;
     String out = null;
+    vtnName = formatField(vtnName);
     Logger.info("Creating VTN: " + vtnName);
 
     try {
@@ -188,7 +203,7 @@ public class VtnClient {
 
     String isDeleted = null;
     String string = null;
-
+    vtnName = formatField(vtnName);
     Logger.info("Deleting VTN: " + vtnName);
 
     try {

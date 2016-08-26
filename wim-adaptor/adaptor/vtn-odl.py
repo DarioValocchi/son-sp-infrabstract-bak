@@ -40,7 +40,7 @@ if args.installation:
 		print 'VTN ERROR ' + str(r.status_code)
 		exit(1) 
 	#create vbridge in VTN
-	vbr = 'vbraaa'
+	vbr = 'vbrX'
 	b_url ='operations/vtn-vbridge:update-vbridge'
 	data = {'input': { 'tenant-name': vtn_name, 'bridge-name' : vbr}}
 	r = requests.post(url+b_url, headers = headers, auth=(username, password), json=data) # this : curl --user "username":"pass" -H "Content-type: application/json" -X POST http://localhost:8181/restconf/operations/vtn-vbridge:update-vbridge -d '{"input":{"tenant-name":"vtn1", "bridge-name":"vbr1"}}'
@@ -83,7 +83,7 @@ if args.installation:
 if args.set_flow:
 	cond, source_net, dest_net, vtn_name = args.set_flow
 	
-	vbr = 'vbraaa'
+	vbr = 'vbrX'
 	s_url = 'operations/vtn-flow-condition:set-flow-condition'
 	data = {'input' : {'name': cond, 'vtn-flow-match': [{'index': '1','vtn-inet-match':{ 'source-network': source_net, 'destination-network': dest_net }}]}}
 	r = requests.post(url+s_url, headers=headers, auth=(username,password), json=data) # this curl --user "username":"pass" -H "Content-type: application/json" -X POST http://localhost:8181/restconf/operations/vtn-flow-condition:set-flow-condition -d '{"input":{"name":"cond1", "vtn-flow-match":[{"index":"1", "vtn-inet-match":{"source-network":"10.0.0.1/32", "destination-network":"10.0.0.3/32"}}]}}'

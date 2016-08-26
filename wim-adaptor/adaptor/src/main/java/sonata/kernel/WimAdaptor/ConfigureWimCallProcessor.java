@@ -7,9 +7,11 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -43,6 +45,10 @@ public class ConfigureWimCallProcessor extends AbstractCallProcessor {
         new UnitDeserializer());
     mapper.registerModule(module);
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+    mapper.disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS);
+    mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+    mapper.disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
+    mapper.setSerializationInclusion(Include.NON_NULL);
     try {
       response = mapper.readValue(message.getBody(), DeployServiceResponse.class);
       Logger.info("payload parsed");
@@ -54,7 +60,7 @@ public class ConfigureWimCallProcessor extends AbstractCallProcessor {
       out = false;
     }
 
-    String instanceId = response.getNsr().getInstanceUuid();
+    String instanceId = response.getNsr().getId();
     String vimId = response.getVimUuid();
 
     WimWrapper wim = (WimWrapper) WrapperBay.getInstance().getWimRecord(vimId).getWimWrapper();
@@ -71,7 +77,7 @@ public class ConfigureWimCallProcessor extends AbstractCallProcessor {
         this.sendToMux(responseMessage);
       } catch (JsonProcessingException e) {
         Logger.error("Unable to serialize YAML response", e);
-        sendResponse("{\"status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\""
+        sendResponse("{\"request_status\":\"ERROR\",\"module\":\"WimAdaptor\",\"message\":\""
             + e.getMessage() + "\"}");
       }
 

@@ -82,7 +82,7 @@ public class AddWimCallProcessor extends AbstractCallProcessor {
     config.setWimEndpoint(vimEndpoint);
     config.setAuthUserName(authUser);
     config.setAuthPass(authPass);
-    // config.setServicedSegments(servicedSegments);
+    config.setServicedSegments(servicedSegments);
     String output = null;
     boolean out = true;
 

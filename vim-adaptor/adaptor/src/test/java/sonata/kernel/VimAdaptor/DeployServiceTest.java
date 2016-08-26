@@ -57,6 +57,8 @@ import sonata.kernel.VimAdaptor.commons.vnfd.Unit.MemoryUnit;
 import sonata.kernel.VimAdaptor.messaging.ServicePlatformMessage;
 import sonata.kernel.VimAdaptor.messaging.TestConsumer;
 import sonata.kernel.VimAdaptor.messaging.TestProducer;
+import sonata.kernel.VimAdaptor.wrapper.WrapperConfiguration;
+import sonata.kernel.VimAdaptor.wrapper.odlWrapper.OdlWrapper;
 import sonata.kernel.VimAdaptor.wrapper.openstack.OpenStackHeatClient;
 
 import java.io.BufferedReader;
@@ -380,11 +382,10 @@ public class DeployServiceTest implements MessageReceiver {
    * This test is de-activated, if you want to use it with your NFVi-PoP, please edit the addVimBody
    * and addNetVimBody String Member to match your OpenStack and ODL configuration and substitute
    * the @Ignore annotation with the @Test annotation
-   * 
-   * @throws IOException
+   * @throws Exception 
    */
   @Ignore
-  public void testDeployServiceOpenStack() throws IOException, InterruptedException {
+  public void testDeployServiceOpenStack() throws Exception {
 
     BlockingQueue<ServicePlatformMessage> muxQueue =
         new LinkedBlockingQueue<ServicePlatformMessage>();
@@ -535,6 +536,15 @@ public class DeployServiceTest implements MessageReceiver {
     status = jsonObject.getString("status");
     Assert.assertTrue(status.equals("COMPLETED"));
     core.stop();
+    
+    //clean the SFC engine
+    WrapperConfiguration config = new WrapperConfiguration();
+
+    config.setVimEndpoint("10.100.32.10");
+
+    OdlWrapper wrapper = new OdlWrapper(config);
+    wrapper.deconfigureNetworking(data.getNsd().getInstanceUuid());
+    
 
   }
 

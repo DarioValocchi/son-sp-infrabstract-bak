@@ -27,7 +27,6 @@
 package sonata.kernel.WimAdaptor.wrapper.vtn;
 
 import sonata.kernel.WimAdaptor.WimWrapper;
-import sonata.kernel.WimAdaptor.wrapper.Wrapper;
 import sonata.kernel.WimAdaptor.wrapper.WrapperConfiguration;
 
 public class VtnWrapper extends WimWrapper {
